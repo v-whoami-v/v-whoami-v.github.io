@@ -1,11 +1,1168 @@
 <!DOCTYPE html>
 <html>
+<head>
 <meta charset="UTF-8">
 <meta name="author" content="whoami">
-<head>
-<title>テストページ</title>
+<link rel="stylesheet" href="style.css">
+<link href="lightbox/css/lightbox.css" rel="stylesheet">
+<script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="lightbox/js/lightbox.js" type="text/javascript"></script>
+<title>ソフトドリフトに関する調査 〜マリオカート8デラックス版〜</title>
 </head>
 <body>
-<h1>テストページ</h1>
+
+<div class="top"></div>
+
+<div class="center">
+
+<h1 class="title">ソフトドリフトに関する調査<br>〜マリオカート8デラックス版〜</h1>
+
+<div class="author">
+<span class="author">著者: <a href="https://twitter.com/v_whoami_v">whoami</a></span>
+<br>
+<span class="date">初稿公開日: 2019年3月10日</span>
+</div>
+
+<h2 id="content">目次</h2>
+<ol>
+<li><a href="#ch1">はじめに</a></li>
+<li><a href="#ch2">ミニターボ</a></li>
+<li><a href="#ch3">ソフトドリフト</a></li>
+<li><a href="#ch4">調査内容の詳細</a></li>
+<li><a href="#ch5">まとめ</a></li>
+</ol>
+
+<hr>
+
+  <h1 id="ch1" class="main">はじめに</h1>
+
+<p>
+このページではマリオカート8デラックスでのソフトドリフトと呼ばれる技術について説明します。マリオカート8デラックス以外のマリオカートでも同様の技術は存在しますが、本ページではマリオカート8デラックスについてのみ説明を行います。
+ソフトドリフトは斜め入力や早溜めとして知られている技術(の一部)をより一般的に定義したものです。比較的難易度は高めの技術かもしれないですが、自由に車体をコントロールするためには重要な技術だと思います。
+ということで、ソフトドリフトに関して少し詳しく調査を行いましたのでその調査結果を説明します。
+</p>
+
+<div class="note-title"><span class="note-title">とりあえず結論</span></div>
+<div class="note-body">
+「詳しい説明なんていらない！早溜めのためにはスティックを何度まで倒していいの？」という方もいらっしゃると思います。ということで簡単に結論から説明します。
+早溜めのためのスティックの入力角度の限界は真右や真左からおよそ45度の角度です。
+早溜めのためには、この範囲でスティックを動かします。
+実際には45度よりもわずかに狭くなりますが、ジョイコンやプロコンのような素直なコントローラを用いているのであれば誤差の範囲と言えるでしょう。
+</div>
+
+<div class="note-title"><span class="note-title">注意</span></div>
+<div class="note-body">
+本ページの内容は、いろいろな方の意見やページを参考にさせていただき、<a href="https://twitter.com/v_whoami_v">whoami</a>が独自に行った調査の結果をまとめたものです。間違いのないように注意して書いていますが内容が正しいという保証はありません。また、ソフトウェアのアップデート等により現在の仕様と調査結果が異なる可能性があることにご注意ください。
+</div>
+
+<h1 id="ch2" class="main">ミニターボ</h1>
+
+<p>
+マリオカート8デラックスではドリフトをしばらく行っているとドリフトを終了した時にミニターボと呼ばれるブーストが発動します。
+(普通のコーナリングでもミニターボの発動は可能ですがあまり実用的ではないのでここでは説明しません。)
+ミニターボにはミニターボ(MT)、スーパーミニターボ(SMT)、ウルトラミニターボ(UMT)の三種類が存在し、MT、SMT、UMTの順でブーストの発動時間が長くなります。
+以後、これら三種類のミニターボのことをミニターボと呼び、別々に扱う必要がある場合にはMT、SMT、UMTと呼ぶことにします。
+また、ドリフト終了時にどのミニターボが発動するかは、ドリフト中の車体から発生する火花の色(MTなら青、SMTならオレンジ、UMTなら紫)で識別できます。
+</p>
+
+<table class="color">
+  <tr>
+    <th>MT発動なし</th>
+    <th>MT発動可能状態</th>
+    <th>SMT発動可能状態</th>
+    <th>UMT発動可能状態</th>
+  </tr>
+  <tr>
+    <td><div class="sc-color"><a href="images/mt0.jpg" data-title="" data-lightbox="mt"><img src="images/mt0.jpg" class="sc-color"></a></div></td>
+    <td><div class="sc-color"><a href="images/mt1.jpg" data-title="" data-lightbox="mt"><img src="images/mt1.jpg" class="sc-color"></a></div></td>
+    <td><div class="sc-color"><a href="images/mt2.jpg" data-title="" data-lightbox="mt"><img src="images/mt2.jpg" class="sc-color"></a></div></td>
+    <td><div class="sc-color"><a href="images/mt3.jpg" data-title="" data-lightbox="mt"><img src="images/mt3.jpg" class="sc-color"></a></div></td>
+  </tr>
+</table>
+
+<h2>ブーストカウンタ</h2>
+
+<p>
+<a href="https://www.mariowiki.com/Mario_Kart_8_Deluxe_in-game_statistics">Mario Kart 8 Deluxe in-game statistics</a>によると、どのブーストが発動するか決定するためにブーストカウンタと呼ばれる値が利用されているようです。
+ブーストカウンタの値はドリフト開始時は0ですが、ドリフトを維持している間に増加していきます。
+ドリフト中はブーストカウンタの大きさによって車体から発生する火花の色が変わっていきます。また、ドリフト終了時にはブーストカウンタの大きさによりMT、SMT、UMTのどれが発動するか決まります。
+</p>
+
+<p>
+<a href="https://www.youtube.com/watch?time_continue=3&v=JMmDEup47JE">[MK8DX] ターボを溜める</a>によるとドリフト中のブーストカウンタの増加量は二段階あるようです。増加量はスティックをどの程度左右に倒しているかで変化します。調べてみたのですが、ブーストカウンタは映像フレームごとに5あるいは2増加するようになっているようです。時間で換算すると速く溜まる時間(増加量5の場合)と遅く溜まる時間(増加量2の場合)の時間差は2.5倍になります。
+</p>
+
+<table class="tdef">
+<caption>表中の各行の説明</caption>
+<tr>
+<td>
+  <dl class="tdef">
+    <dt>時間の流れ</dt>
+    <dd>時間の向き</dd>
+    <dt>相対時刻</dt>
+    <dd>ドリフト開始時からの時間</dd>
+    <dt>相対フレーム番号</dt>
+    <dd>ドリフト開始時からのフレーム数</dd>
+    <dt>ブーストカウンタ</dt>
+    <dd>ブーストカウンタの値</dd>
+    <dt>発動ミニターボ</dt>
+    <dd>ドリフトを終了した時に発動するミニターボの種類</dd>
+    <dt>発動ミニターボ</dt>
+    <dd>ドリフトを終了した時に発動するミニターボの種類</dd>
+    <dt>ゲーム画面</dt>
+    <dd>ゲームのキャプチャ画像</dd>
+  </dl>
+</td>
+</tr>
+</table>
+
+<table class="mt-ex">
+  <caption>ブーストカウンタと発動ミニターボの例</caption>
+  <tr>
+    <td>時間の流れ</td>
+    <td>→</td>
+    <td>→</td>
+    <td>→</td>
+    <td>→</td>
+    <td>→</td>
+    <td>→</td>
+    <td class="mt">→</td>
+    <td class="mt">→</td>
+    <td class="mt">→</td>
+    <td class="mt">→</td>
+    <td class="smt">→</td>
+    <td class="smt">→</td>
+    <td class="smt">→</td>
+    <td class="smt">→</td>
+    <td class="umt">→</td>
+    <td class="umt">→</td>
+    <td class="umt">→</td>
+  </tr>
+  <tr>
+    <td>相対時刻</td>
+    <td>0.000秒</td>
+    <td>0.017秒</td>
+    <td>0.033秒</td>
+    <td>0.050秒</td>
+    <td>…</td>
+    <td>0.750秒</td>
+    <td class="mt">0.767秒</td>
+    <td class="mt">0.783秒</td>
+    <td class="mt">…</td>
+    <td class="mt">1.617秒</td>
+    <td class="smt">1.633秒</td>
+    <td class="smt">1.650秒</td>
+    <td class="smt">…</td>
+    <td class="smt">2.483秒</td>
+    <td class="umt">2.500秒</td>
+    <td class="umt">2.517秒</td>
+    <td class="umt">…</td>
+  </tr>
+  <tr>
+    <td>相対フレーム番号</td>
+    <td>0</td>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>…</td>
+    <td>45</td>
+    <td class="mt">46</td>
+    <td class="mt">47</td>
+    <td class="mt">…</td>
+    <td class="mt">97</td>
+    <td class="smt">98</td>
+    <td class="smt">99</td>
+    <td class="smt">…</td>
+    <td class="smt">149</td>
+    <td class="umt">150</td>
+    <td class="umt">151</td>
+    <td class="umt">…</td>
+  </tr>
+  <tr class="bcount">
+    <td>ブーストカウンタ</td>
+    <td>0</td>
+    <td>5</td>
+    <td>10</td>
+    <td>15</td>
+    <td>…</td>
+    <td>225</td>
+    <td class="mt">230</td>
+    <td class="mt">235</td>
+    <td class="mt">…</td>
+    <td class="mt">485</td>
+    <td class="smt">490</td>
+    <td class="smt">495</td>
+    <td class="smt">…</td>
+    <td class="smt">745</td>
+    <td class="umt">750</td>
+    <td class="umt">755</td>
+    <td class="umt">…</td>
+  </tr>
+  <tr>
+    <td>発動ミニターボ</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>…</td>
+    <td>N/A</td>
+    <td class="mt">MT</td>
+    <td class="mt">MT</td>
+    <td class="mt">…</td>
+    <td class="mt">MT</td>
+    <td class="smt">SMT</td>
+    <td class="smt">SMT</td>
+    <td class="smt">…</td>
+    <td class="smt">SMT</td>
+    <td class="umt">UMT</td>
+    <td class="umt">UMT</td>
+    <td class="umt">…</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><div class="sc-clip"><a href="images/umt_475_219_128_no000.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no000.jpg" class="sc-clip"></a></div></td>
+    <td><div class="sc-clip"><a href="images/umt_475_219_128_no001.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no001.jpg" class="sc-clip"></a></div></td>
+    <td><div class="sc-clip"><a href="images/umt_475_219_128_no002.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no002.jpg" class="sc-clip"></a></div></td>
+    <td><div class="sc-clip"><a href="images/umt_475_219_128_no003.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no003.jpg" class="sc-clip"></a></div></td>
+    <td>…</td>
+    <td><div class="sc-clip"><a href="images/umt_475_219_128_no045.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no045.jpg" class="sc-clip"></a></div></td>
+    <td class="mt"><div class="sc-clip"><a href="images/umt_475_219_128_no046.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no046.jpg" class="sc-clip"></a></div></td>
+    <td class="mt"><div class="sc-clip"><a href="images/umt_475_219_128_no047.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no047.jpg" class="sc-clip"></a></div></td>
+    <td class="mt">…</td>
+    <td class="mt"><div class="sc-clip"><a href="images/umt_475_219_128_no097.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no097.jpg" class="sc-clip"></a></div></td>
+    <td class="smt"><div class="sc-clip"><a href="images/umt_475_219_128_no098.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no098.jpg" class="sc-clip"></a></div></td>
+    <td class="smt"><div class="sc-clip"><a href="images/umt_475_219_128_no099.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no099.jpg" class="sc-clip"></a></div></td>
+    <td class="smt">…</td>
+    <td class="smt"><div class="sc-clip"><a href="images/umt_475_219_128_no149.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no149.jpg" class="sc-clip"></a></div></td>
+    <td class="umt"><div class="sc-clip"><a href="images/umt_475_219_128_no150.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no150.jpg" class="sc-clip"></a></div></td>
+    <td class="umt"><div class="sc-clip"><a href="images/umt_475_219_128_no151.jpg" data-title="" data-lightbox="umt_475_219_128_no"><img src="images/umt_475_219_128_no151.jpg" class="sc-clip"></a></div></td>
+    <td class="umt">…</td>
+  </tr>
+</table>
+
+<h2>ミニターボ性能</h2>
+
+<p>
+キャラクターやカート、タイヤ、グライダーの選択により利用する車体の性能は様々に異なるものとなります。その中にミニターボ性能というものが存在します。ミニターボ性能はミニターボが発動可能になるまでの時間やミニターボ発動時間、また発動中の速度に影響するものであり、マリオカート8デラックスでは非常に重要な性能となります。カートの選択画面で車体の性能の一部を表示することはできるのですが、残念ながらミニターボ性能をゲーム画面中で確認する方法はありません。そのため、ミニターボ性能を知るためにはゲーム外の情報を用いる必要があります。調べる方法は色々ありますが、キャラクタやカート等を選択していくだけで、ミニターボ性能をはじめ様々なパラメータを調べることができる<a href="https://www.mk8dxbuilder.com/">Mario Kart 8 Deluxe Builder 1.1</a>などのページを使うのが簡単だと思います。
+</p>
+
+<p>
+<a href="https://docs.google.com/spreadsheets/d/1g7A-38tn9UAIbB2B3sZI-MpILsS3ZS870UTVMRRxh4Q/edit#gid=0">Luigi_Fan2's Mario Kart 8 Deluxe Stat Chart</a>と<a href="https://www.mariowiki.com/Mario_Kart_8_Deluxe_in-game_statistics">Mario Kart 8 Deluxe in-game statistics</a>によるとミニターボ性能とMT、SMT、UMTが発動可能となるブーストカウンタの閾値の関係とその結果から計算されたミニターボが発動可能になるまでの時間は以下の通りとなります。
+</p>
+
+<table style="width:100%;">
+<tr>
+<td>
+
+<table class="mt">
+<caption>ブーストカウンタの閾値</caption>
+<tr>
+    <th>ミニターボ性能</th>
+    <th>MT閾値</th>
+    <th>SMT閾値</th>
+    <th>UMT閾値</th>
+</tr>
+<tr><td>1.00</td><td>280</td><td>590</td><td>900</td></tr>
+<tr><td>1.25</td><td>278</td><td>586</td><td>894</td></tr>
+<tr><td>1.50</td><td>276</td><td>582</td><td>888</td></tr>
+<tr><td>1.75</td><td>274</td><td>578</td><td>882</td></tr>
+<tr><td>2.00</td><td>272</td><td>574</td><td>876</td></tr>
+<tr><td>2.25</td><td>269</td><td>568</td><td>867</td></tr>
+<tr><td>2.50</td><td>266</td><td>562</td><td>858</td></tr>
+<tr><td>2.75</td><td>263</td><td>556</td><td>849</td></tr>
+<tr><td>3.00</td><td>260</td><td>550</td><td>840</td></tr>
+<tr><td>3.25</td><td>256</td><td>542</td><td>828</td></tr>
+<tr><td>3.50</td><td>252</td><td>534</td><td>816</td></tr>
+<tr><td>3.75</td><td>248</td><td>526</td><td>804</td></tr>
+<tr><td>4.00</td><td>244</td><td>518</td><td>792</td></tr>
+<tr><td>4.25</td><td>240</td><td>510</td><td>780</td></tr>
+<tr><td>4.50</td><td>235</td><td>500</td><td>765</td></tr>
+<tr><td>4.75</td><td>230</td><td>490</td><td>750</td></tr>
+<tr><td>5.00</td><td>223</td><td>476</td><td>729</td></tr>
+<tr><td>5.25</td><td>216</td><td>462</td><td>708</td></tr>
+<tr><td>5.50</td><td>208</td><td>446</td><td>684</td></tr>
+<tr><td>5.75</td><td>200</td><td>430</td><td>660</td></tr>
+</table>
+
+</td>
+<td>
+
+<table class="mt-time">
+  <caption>ミニターボが発動可能になるまでの時間</caption>
+ <tr>
+  <th rowspan="2">ミニターボ性能</th>
+  <th colspan="3">ブーストカウンタ増加量2</th>
+  <th colspan="3">ブーストカウンタ増加量5</th>
+ </tr>
+ <tr>
+  <th>MT</th>
+  <th>SMT</th>
+  <th>UMT</th>
+  <th>MT</th>
+  <th>SMT</th>
+  <th>UMT</th>
+</tr>
+
+<!-- 60fps -->
+<tr><td>1.00</td><td>2.333秒</td><td>4.917秒</td><td>7.500秒</td><td>0.933秒</td><td>1.967秒</td><td>3.000秒</td></tr>
+<tr><td>1.25</td><td>2.317秒</td><td>4.883秒</td><td>7.450秒</td><td>0.927秒</td><td>1.953秒</td><td>2.980秒</td></tr>
+<tr><td>1.50</td><td>2.300秒</td><td>4.850秒</td><td>7.400秒</td><td>0.920秒</td><td>1.940秒</td><td>2.960秒</td></tr>
+<tr><td>1.75</td><td>2.283秒</td><td>4.817秒</td><td>7.350秒</td><td>0.913秒</td><td>1.927秒</td><td>2.940秒</td></tr>
+<tr><td>2.00</td><td>2.267秒</td><td>4.783秒</td><td>7.300秒</td><td>0.907秒</td><td>1.913秒</td><td>2.920秒</td></tr>
+<tr><td>2.25</td><td>2.242秒</td><td>4.733秒</td><td>7.225秒</td><td>0.897秒</td><td>1.893秒</td><td>2.890秒</td></tr>
+<tr><td>2.50</td><td>2.217秒</td><td>4.683秒</td><td>7.150秒</td><td>0.887秒</td><td>1.873秒</td><td>2.860秒</td></tr>
+<tr><td>2.75</td><td>2.192秒</td><td>4.633秒</td><td>7.075秒</td><td>0.877秒</td><td>1.853秒</td><td>2.830秒</td></tr>
+<tr><td>3.00</td><td>2.167秒</td><td>4.583秒</td><td>7.000秒</td><td>0.867秒</td><td>1.833秒</td><td>2.800秒</td></tr>
+<tr><td>3.25</td><td>2.133秒</td><td>4.517秒</td><td>6.900秒</td><td>0.853秒</td><td>1.807秒</td><td>2.760秒</td></tr>
+<tr><td>3.50</td><td>2.100秒</td><td>4.450秒</td><td>6.800秒</td><td>0.840秒</td><td>1.780秒</td><td>2.720秒</td></tr>
+<tr><td>3.75</td><td>2.067秒</td><td>4.383秒</td><td>6.700秒</td><td>0.827秒</td><td>1.753秒</td><td>2.680秒</td></tr>
+<tr><td>4.00</td><td>2.033秒</td><td>4.317秒</td><td>6.600秒</td><td>0.813秒</td><td>1.727秒</td><td>2.640秒</td></tr>
+<tr><td>4.25</td><td>2.000秒</td><td>4.250秒</td><td>6.500秒</td><td>0.800秒</td><td>1.700秒</td><td>2.600秒</td></tr>
+<tr><td>4.50</td><td>1.958秒</td><td>4.167秒</td><td>6.375秒</td><td>0.783秒</td><td>1.667秒</td><td>2.550秒</td></tr>
+<tr><td>4.75</td><td>1.917秒</td><td>4.083秒</td><td>6.250秒</td><td>0.767秒</td><td>1.633秒</td><td>2.500秒</td></tr>
+<tr><td>5.00</td><td>1.858秒</td><td>3.967秒</td><td>6.075秒</td><td>0.743秒</td><td>1.587秒</td><td>2.430秒</td></tr>
+<tr><td>5.25</td><td>1.800秒</td><td>3.850秒</td><td>5.900秒</td><td>0.720秒</td><td>1.540秒</td><td>2.360秒</td></tr>
+<tr><td>5.50</td><td>1.733秒</td><td>3.717秒</td><td>5.700秒</td><td>0.693秒</td><td>1.487秒</td><td>2.280秒</td></tr>
+<tr><td>5.75</td><td>1.667秒</td><td>3.583秒</td><td>5.500秒</td><td>0.667秒</td><td>1.433秒</td><td>2.200秒</td></tr>
+
+
+</table>
+
+</td>
+</tr>
+</table>
+
+<!-- 60fps -->
+<div class="note-title"><span class="note-title">時間の計算方法</span></div>
+<div class="note-body">
+映像フレームレートは60fpsであると仮定し計算を行いました。60fpsでは映像フレームが1秒間に60回切り替わるため、一つの映像フレームが表示される時間は1÷60秒となります。
+<br>
+例えばミニターボ性能が1.00のカスタム用いて、ブーストカウンタの増加量が2の状態でドリフトした場合を考えてみます。この場合、表よりUMTの閾値は900になることが分かります。ブーストカウンタはフレーム毎に2増加するので、ドリフトを始めてから450番目のフレームが表示されたときにブーストカウンタが900になりUMT閾値に到達します。1フレームが表示される時間は1÷60秒なので、450フレームが表示されるまでには450×(1÷60)秒かかります。計算結果は7.5秒となり、これがUMTを発動までに必要なドリフトの時間となります。
+</div>
+
+<p>
+この表は参照先のページから得られた情報に基づいて作成しましたが、ミニターボ性能が4.75のカスタム(ロイ、パタテンテン、スカイローラー、かみひこうき)で実際に実験を行い時間を計測しました。わずかな誤差は見られたものの、その結果は上記の調査内容の通りと言えます。
+</p>
+
+<table class="def">
+  <caption>表中の各行の説明</caption>
+  <tr>
+  <td>
+  <dl class="def">
+    <dt>ゲーム画面</dt>
+    <dd>ゲームのキャプチャ画像</dd>
+    <dt>フレーム数(実測値)</dt>
+    <dd>実際に計測したドリフト開始時からのフレーム数</dd>
+    <dt>フレーム数(理論値)</dt>
+    <dd>理論上のドリフト開始時からのフレーム数</dd>
+    <dt>秒数(実測値)</dt>
+    <dd>フレーム数(実測値)から計算される秒数</dd>
+    <dt>秒数(理論値)</dt>
+    <dd>フレーム数(理論値)から計算される秒数</dd>
+    <dt>ゲーム中の秒数</dt>
+    <dd>ゲーム中のタイム表示に基づく秒数</dd>
+  </dl>
+  </td>
+  </tr>
+</table>
+
+<table class="mt-ex">
+  <caption>ミニターボ性能4.75 ブーストカウンタ増加量2</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_475_218_128_0.jpg" data-title="" data-lightbox="umt_475_218_128"><img src="images/umt_475_218_128_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_218_128_1.jpg" data-title="" data-lightbox="umt_475_218_128"><img src="images/umt_475_218_128_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_218_128_2.jpg" data-title="" data-lightbox="umt_475_218_128"><img src="images/umt_475_218_128_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_218_128_3.jpg" data-title="" data-lightbox="umt_475_218_128"><img src="images/umt_475_218_128_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>115フレーム</td>
+    <td>245フレーム</td>
+    <td>375フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>115フレーム</td>
+    <td>245フレーム</td>
+    <td>375フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>1.917秒</td>
+    <td>4.083秒</td>
+    <td>6.250秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>1.917秒</td>
+    <td>4.083秒</td>
+    <td>6.250秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>1.915秒</td>
+    <td>4.086秒</td>
+    <td>6.256秒</td>
+  </tr>
+</table>
+
+<table class="mt-ex">
+  <caption>ミニターボ性能4.75 ブーストカウンタ増加量5</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_475_219_128_0.jpg" data-title="" data-lightbox="umt_475_219_128"><img src="images/umt_475_219_128_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_219_128_1.jpg" data-title="" data-lightbox="umt_475_219_128"><img src="images/umt_475_219_128_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_219_128_2.jpg" data-title="" data-lightbox="umt_475_219_128"><img src="images/umt_475_219_128_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_475_219_128_3.jpg" data-title="" data-lightbox="umt_475_219_128"><img src="images/umt_475_219_128_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>46フレーム</td>
+    <td>98フレーム</td>
+    <td>150フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>46フレーム</td>
+    <td>98フレーム</td>
+    <td>150フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>0.767秒</td>
+    <td>1.633秒</td>
+    <td>2.500秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>0.767秒</td>
+    <td>1.633秒</td>
+    <td>2.500秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>0.775秒</td>
+    <td>1.638秒</td>
+    <td>2.508秒</td>
+  </tr>
+</table>
+
+<p>
+また、ミニターボ性能が1.00であるカスタム(クッパ、ノーマルATV、ゴールドタイヤ、ゴールドカイト)と、<a href="https://twitter.com/v_whoami_v">whoami</a>が普段利用しているミニターボ性能が4.50のカスタム(軽量Mii、ヨッシーバイク、リーフタイヤ、ゴールドカイト)でも時間を計測しました。わずかな誤差は見られたものの、その結果は上記の調査内容の通りと言えます。
+</p>
+
+<table class="mt-ex">
+  <caption>ミニターボ性能1.00 ブーストカウンタ増加量2</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_100_255_1_0.jpg" data-title="" data-lightbox="umt_100_255_1"><img src="images/umt_100_255_1_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_1_1.jpg" data-title="" data-lightbox="umt_100_255_1"><img src="images/umt_100_255_1_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_1_2.jpg" data-title="" data-lightbox="umt_100_255_1"><img src="images/umt_100_255_1_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_1_3.jpg" data-title="" data-lightbox="umt_100_255_1"><img src="images/umt_100_255_1_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>140フレーム</td>
+    <td>295フレーム</td>
+    <td>450フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>140フレーム</td>
+    <td>295フレーム</td>
+    <td>450フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>2.333秒</td>
+    <td>4.917秒</td>
+    <td>7.500秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>2.333秒</td>
+    <td>4.917秒</td>
+    <td>7.500秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>2.345秒</td>
+    <td>4.913秒</td>
+    <td>7.501秒</td>
+  </tr>
+</table>
+
+
+<table class="mt-ex">
+  <caption>ミニターボ性能1.00 ブーストカウンタ増加量5</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_100_255_2_0.jpg" data-title="" data-lightbox="umt_100_255_2"><img src="images/umt_100_255_2_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_2_1.jpg" data-title="" data-lightbox="umt_100_255_2"><img src="images/umt_100_255_2_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_2_2.jpg" data-title="" data-lightbox="umt_100_255_2"><img src="images/umt_100_255_2_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_100_255_2_3.jpg" data-title="" data-lightbox="umt_100_255_2"><img src="images/umt_100_255_2_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>56フレーム</td>
+    <td>118フレーム</td>
+    <td>180フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>56フレーム</td>
+    <td>118フレーム</td>
+    <td>180フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>0.933秒</td>
+    <td>1.967秒</td>
+    <td>3.000秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>0.933秒</td>
+    <td>1.967秒</td>
+    <td>3.000秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>0.933秒</td>
+    <td>1.967秒</td>
+    <td>2.987秒</td>
+  </tr>
+</table>
+
+
+<table class="mt-ex">
+  <caption>ミニターボ性能4.50 ブーストカウンタ増加量2</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_450_218_128_0.jpg" data-title="" data-lightbox="umt_450_218_128"><img src="images/umt_450_218_128_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_218_128_1.jpg" data-title="" data-lightbox="umt_450_218_128"><img src="images/umt_450_218_128_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_218_128_2.jpg" data-title="" data-lightbox="umt_450_218_128"><img src="images/umt_450_218_128_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_218_128_3.jpg" data-title="" data-lightbox="umt_450_218_128"><img src="images/umt_450_218_128_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>118フレーム</td>
+    <td>251フレーム</td>
+    <td>383フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>118フレーム</td>
+    <td>250フレーム</td>
+    <td>383フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>1.967秒</td>
+    <td>4.183秒</td>
+    <td>6.383秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>1.958秒</td>
+    <td>4.167秒</td>
+    <td>6.375秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>1.961秒</td>
+    <td>4.178秒</td>
+    <td>6.375秒</td>
+  </tr>
+</table>
+
+<table class="mt-ex">
+  <caption>ミニターボ性能4.50 ブーストカウンタ増加量5</caption>
+  <tr>
+    <td></td>
+    <td>ドリフト開始時</td>
+    <td>MT可能開始時</td>
+    <td>SMT可能開始時</td>
+    <td>UMT可能開始時</td>
+  </tr>
+  <tr>
+    <td>ゲーム画面</td>
+    <td><a href="images/umt_450_219_128_0.jpg" data-title="" data-lightbox="umt_450_219_128"><img src="images/umt_450_219_128_0.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_219_128_1.jpg" data-title="" data-lightbox="umt_450_219_128"><img src="images/umt_450_219_128_1.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_219_128_2.jpg" data-title="" data-lightbox="umt_450_219_128"><img src="images/umt_450_219_128_2.jpg" class="sc"></a></td>
+    <td><a href="images/umt_450_219_128_3.jpg" data-title="" data-lightbox="umt_450_219_128"><img src="images/umt_450_219_128_3.jpg" class="sc"></a></td>
+  </tr>
+  <tr>
+    <td>フレーム数(実測値)</td>
+    <td>0フレーム</td>
+    <td>48フレーム</td>
+    <td>101フレーム</td>
+    <td>154フレーム</td>
+  </tr>
+  <tr>
+    <td>フレーム数(理論値)</td>
+    <td>0フレーム</td>
+    <td>47フレーム</td>
+    <td>100フレーム</td>
+    <td>153フレーム</td>
+  </tr>
+  <tr>
+    <td>秒数(実測値)</td>
+    <td>0.000秒</td>
+    <td>0.800秒</td>
+    <td>1.683秒</td>
+    <td>2.567秒</td>
+  </tr>
+  <tr>
+    <td>秒数(理論値)</td>
+    <td>0.000秒</td>
+    <td>0.783秒</td>
+    <td>1.667秒</td>
+    <td>2.550秒</td>
+  </tr>
+  <tr>
+    <td>ゲーム中の秒数</td>
+    <td>0.000秒</td>
+    <td>0.788秒</td>
+    <td>1.673秒</td>
+    <td>2.570秒</td>
+  </tr>
+</table>
+
+<p>
+以上、発動するミニターボを決めるために利用されるブーストカウンタについて紹介しました。また、スティックをどの程度左右に倒しているかによってフレーム毎のブーストカウンタ増加量が2の場合と5の場合の二段階があることを説明しました。さらにMT、SMT、UMT発動に必要なブーストカウンタの閾値について説明しました。最後に、ミニターボ発動までに必要なドリフトの時間の計算方法についても説明し、例として三つの異なるカスタムで実験を行い計算結果が正しいことを示しました。
+</p>
+
+  <h1 id="ch3" class="main">ソフトドリフト</h1>
+
+<p>
+それではソフトドリフトについて詳細に説明していきます。今後の説明を簡単にするために、まずはドリフトを以下の五つに分類しておきたいと思います。
+</p>
+
+<table class="def">
+  <caption>ドリフトの分類</caption>
+  <tr>
+  <td>
+<dl class="def">
+    <dt>ドリフト</dt>
+    <dd>全てのドリフト</dd>
+    <dt>ハードドリフト</dt>
+    <dd>ブーストカウンタの増加量が5で回転半径が小さいドリフト</dd>
+    <dt>ソフトドリフト</dt>
+    <dd>ブーストカウンタの増加量が5で回転半径が大きなドリフト</dd>
+    <dt>ニュートラルドリフト</dt>
+    <dd>スティックを左右のどちらにも倒していない状態でのドリフト</dd>
+    <dt>カウンタードリフト</dt>
+    <dd>スティックを外側に倒した状態でのドリフト</dd>
+</dl>
+</td>
+</tr>
+</table>
+
+<div class="note-title"><span class="note-title">名のないドリフト</span></div>
+<div class="note-body">
+ソフトドリフトとニュートラルドリフトの間のドリフトについては適切な名前が思いつきませんでした。このドリフトはソフトドリフトよりも回転半径が大きくなりブーストカウンタの増加量が2となります。このドリフトを指定したい場合には、文脈から推測できるようにしておく必要があるかもしれません。
+</div>
+
+<p>
+本ページでは、この中でも特にソフトドリフトについて詳細に説明します。まずはソフトドリフトの定義を行い、その後ソフトドリフトのための操作方法について説明します。また、ハードドリフトとソフトドリフトの区別をどのようにするかの提案を行います。最後にソフトドリフト中の回転半径について考察します。
+</p>
+
+  <h2>ソフトドリフトの定義</h2>
+
+<p>
+まずはソフトドリフトの定義についてです。明確な定義はないと思いますので、以下の二つを満たすドリフトをマリオカート8デラックスでのソフトドリフトと定義したいと思います。
+</p>
+
+<ul class="sddef">
+<li>ハードドリフトとブーストカウンタの増加量が同じドリフト</li>
+<li>ハードドリフトよりも大きな回転半径で曲がるドリフト</li>
+</ul>
+
+<p>
+ソフトドリフトとは、ハードドリフトと同様にブーストカウンタの増加量が5の状態を維持、要するにブーストカウンタが早く溜まる状態を維持しつつ、ハードドリフトより緩やかにコーナーを曲がるドリフトのことです。一つ目の条件は非常に分かりやすいかと思います。一方、二つ目はソフトドリフトとハードドリフトの境界を明確にするという条件であり、これはなかなか難しい問題となります。というのは、おそらく完璧な真横以外の入力では、たとえほんのごくわずかなズレであっても回転半径が大きくなってしまう可能性が高いからです。十字キーを用いているならともかく、アナログスティックでは寸分の狂いなく真横に倒すのは非常に困難であり、ハードドリフトを行うことは大変困難となります。
+</p>
+
+<p>
+まずは、ハードドリフトとソフトドリフトを区別せずに一つ目の条件だけを考えます。そののち、ハードドリフトとソフトドリフトの境界である二つ目の条件について考えてみます。
+</p>
+
+<h2>コントローラの出力値</h2>
+
+<p>
+ここではUSBのコントローラを利用して調査を行いました。どのような操作を行えばハードドリフトやソフトドリフトを実現できるかを説明します。Bluetooth接続となるプロコンやジョイコンでは調査していませんが、<a href="https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering">A look at inner workings of Joycon and Nintendo Switch</a>の通りだとすると同様の結果になると思われます。
+</p>
+
+<p>
+まずは、USBコントローラからSwitchに送信されるアナログスティックの情報について簡単に説明します。アナログスティックの出力はアナログ値ですが、デジタル値としてSwitchに転送されます。この時、左右は0~255、上下も0~255の整数値で表されることになります。これら二つの値の組をアナログスティックから出力される座標とします。ちなみに左上の座標は(0, 0)で右下が(255, 255)、中心は(128, 128)となります。下の図ではコントローラが出力可能な値を黒丸で表現したものとなります。
+</p>
+
+<table class="plot">
+  <caption>コントローラが送信するアナログスティックの出力値の範囲</caption>
+  <tr><td><a href="images/plot_all.png" target="_blank"><img src="images/plot_all.png" class="plot"></a></td></tr>
+</table>
+
+<div class="note-title"><span class="note-title">デッドゾーンについて</span></div>
+<div class="note-body">
+本ページではデッドゾーンについては考慮せずに説明していますが、実際に操作をする時にはデッドゾーンについて考える必要があるかもしれません。
+<br>
+アナログスティックの生成する値は非常に精度の高いものとなります。スティックに触っていない時にはスティックは完全に中心にあると考えたいのですが、振動や直前に倒したスティックの向き等に影響を受け微妙にアナログ値の出力が変化し中心がずれてしまう可能性があります。このような場合でも出力される値が中心となるように、中心付近ではデッドゾーンと呼ばれる領域が設定されています。この範囲にスティックがある時には常にスティックが中心に存在すると認識される領域です。
+<br>
+ところで、デッドゾーンはどのように実現されているのでしょうか？ジョイコンやプロコンでは中心付近のみスティックの動作量と出力値が線形ではないように計算することで使っている人が違和感を感じないように実現されているのではないかと想像しています。より安価なコントローラではそのような処理はなされずに、X軸方向もY軸方向も全域に渡り中心付近にデッドゾーンを持つように実装されているのではないかと思います。
+
+<table class="deadzone">
+  <tr>
+    <th>中心にデッドゾーンのあるコントローラ</th>
+    <th>全域にデッドゾーンのあるコントローラ</th>
+  </tr>
+  <tr>
+    <td><img class="deadzone" src="images/deadzone1.jpg" width="80%"></td>
+    <td><img class="deadzone" src="images/deadzone2.jpg" width="80%"></td>
+  </tr>
+</table>
+
+<br>
+「スティックの補正」画面でアナログスティックを正確に右に倒しきり、そこで微妙に上下に操作した時に少し引っかかりがあるコントローラが存在すると思います。その場合にはX軸、Y軸の全域でデッドゾーンが実装されているコントローラであると考えられます。一方ジョイコンやプロコンでは非常に滑らかに動作することが確認できると思います。
+</div>
+
+
+<p>
+もちろん操作の遊びがありますので、スティックを倒し切らなくても最大値、最小値を出力することができます。例えば下図でスティックの位置が操作の遊びの範囲にある場合には、スティックから出力される値は全て同じ(255,128)になります。
+</p>
+
+<table class="figure">
+  <caption>スティックの位置と操作の遊びの例</caption>
+  <tr><td><a href="images/output_outside.jpg" target="_blank"><div class="output_outside"><img class="output_outside" src="images/output_outside.jpg" width="50%"></div></a></td></tr>
+</table>
+
+<h2>ハードドリフトとソフトドリフトの条件</h2>
+
+<p>
+どのような操作を行えばハードドリフトやソフトドリフトを実践できるのでしょうか。
+先ほど説明したコントローラの出力が取りうる値の中でハードドリフトやソフトドリフトが実現できる組み合わせを全て探し出すことで、ハードドリフトやソフトドリフトを行うために必要なコントローラからの出力が明確になります。ということで、その値を調査して図示しました。この図の中で黒丸で示した値が出力されるようにスティックを倒せばブーストカウンタの増加量が5であるハードドリフトやソフトドリフトを実現できます。
+</p>
+
+<table class="plot">
+  <caption>ブーストカウンタの増加量が5となるアナログスティックの出力値の範囲</caption>
+  <tr><td><a href="images/plot_highmt.png" target="_blank"><img src="images/plot_highmt.png" class="plot"></a></td></tr>
+</table>
+
+<p>
+例えば、真横に倒した場合、左コーナーは(0,128) ~ (37, 128)、右コーナーは(217, 128) ~ (255, 128)を出力するようにスティックを倒せばハードドリフトやソフトドリフトとなります。
+</p>
+
+<p>
+ソフトドリフトはスティックを倒し切らずに途中で止めることで実現できますが、スティックを倒し切らずに途中で止めることは困難だと思います。そこで、左右から少し角度をつけて倒し切ることでソフトドリフトを実現することが一般的となります。上記の図をみると、そのための角度の最大はおよそ水平方向から45度ということが分かります。
+この範囲に45度は含まれませんが、人間の手でそれほど精密なコントロールは不可能だと思うので45度と言って問題ないと思います。
+もしも45度付近で45度ちょうどを出力するようなコントローラがあれば、45度が含まれない影響が分かるかもしれません。
+</p>
+
+<p>
+たとえば、アナログスティックではなく十字キーを用いてコントロールするときには45度単位でしかコントロールできません。斜め45度はソフトドリフト可能な範囲に含まれないため、十字キーではソフトドリフトは不可能であり、ブーストカウンタを早く溜めるにはハードドリフトを行う必要があります。
+</p>
+
+<p>
+どの方向にスティックを倒せば良いのかイメージが湧かないという方のために、ハードドリフトとソフトドリフトを実現するスティックの動作範囲を「スティックの補正」画面の動画として作成しました。ドリフト中はこの動画内のスティックの動作範囲内になるようにスティックを維持することでハードドリフトやソフトドリフト、つまりブーストカウンタの増加量が5となります。
+</p>
+
+<table class="video">
+<caption>ハードドリフトとソフトドリフトのスティックの範囲</caption>
+<tr>
+  <th>左側</th>
+  <th>右側</th>
+</tr>
+<tr>
+  <td><video src="videos/left.mp4" loop controls width="480" height="270"></video></td>
+  <td><video src="videos/right.mp4" loop controls width="480" height="270"></video></td>
+</tr>
+</table>
+
+<p>
+ということで、はじめにでも述べた結論の通り境界の角度はおよそ45度となります。
+</p>
+
+  <h2>ハードドリフトとソフトドリフトの区別</h2>
+
+<p>
+ハードドリフトもソフトドリフトもブーストカウンタの増加量を5の状態を維持して行うドリフトです。定義でも書いた通り、その違いはコーナリング中の回転半径です。では、ハードドリフトとソフトドリフトの境界はどこにあるのでしょうか？
+</p>
+
+<p>
+非常に分かりやすい区別の方法としては、スティックを真横に倒した時のみ、すなわち左コーナーであれば(0,128)、右コーナーであれば(255,128)を出力するようにスティックを倒した時のみハードドリフトと呼ぶという方法が考えられます。しかし、アナログスティックを寸分の狂いなく真横に倒すのは非常に困難であり、ほとんどの人はハードドリフトは使っていないと言うことになりますのであまり現実的ではなさそうです。
+</p>
+
+<p>
+そこで、ドリフト中の"音"の変化による区別を考えてみました。ただの考えですので「そういう考えもあるんだね」ぐらいのつもりで読んでいただければと思います。
+</p>
+
+<h3>ドリフト中の音</h3>
+
+<p>
+ドリフト中ですが、スティック入力をイン側に大きく行うとキュルキュルという音が鳴ります。これは左右それぞれ90%以上の大きさとなるように左右にスティックを倒すと鳴り始めます。例として右側に曲がる場合を考えてみます。右側に曲がる際のスティック入力の範囲は全体で(129,128)から(255,128)の127段階あります。この90%は127×0.9=114.3となります。これ以上の値となるという事なので音が鳴る範囲は128+114.3=242.3以上となる範囲であり、アナログスティックの出力値は整数になってしまうため実際には(243, 128)から(255,128)となります。
+</p>
+
+<table class="video">
+<tr>
+  <th>音なし(242,128)</th>
+  <th>音あり(243,128)</th>
+</tr>
+<tr>
+  <td><video src="videos/border_softdrift_small.mp4" controls width="320" height="180"></video></td>
+  <td><video src="videos/border_harddrift_small.mp4" controls width="320" height="180"></video></td>
+</tr>
+</table>
+
+
+<h3>ソフトドリフトのアナログスティック出力値</h3>
+
+<p>
+真横以外の角度については必要に応じて正規化を行いX軸への写像をとり、その値が90%以上になっているかで音が出るかどうか調べることができます。ということで、ドリフト中の"音"をハードドリフトとソフトドリフトの違いとして考えた場合に、ソフトドリフトを実現するコントローラの出力を図に示します。この図は先ほどの図からハードドリフトの範囲の黒丸を削除したものとなっています。
+</p>
+
+<table class="plot">
+  <caption>ソフトドリフトのアナログスティックの出力値の範囲</caption>
+  <tr><td><a href="images/plot_softdrift.png" target="_blank"><img src="images/plot_softdrift.png" class="plot"></a></td></tr>
+</table>
+
+<p>
+このソフトドリフトの範囲を「スティックの補正」画面の動画として作成しました。ドリフト中はこの動画内のスティックの動作範囲内になるようにスティックを維持することでキュルキュルという音はならないがブーストカウンタの増加量が5となるソフトドリフトとなります。
+</p>
+
+<table class="video">
+<caption>ソフトドリフトのスティックの範囲</caption>
+<tr>
+  <th>左側</th>
+  <th>右側</th>
+</tr>
+<tr>
+  <td><video src="videos/left_soft.mp4" loop controls width="480" height="270"></video></td>
+  <td><video src="videos/right_soft.mp4" loop controls width="480" height="270"></video></td>
+</tr>
+</table>
+
+<p>
+とはいえ、やはり境界は曖昧なので、自分がハードドリフトをしているつもりなら自分はハードドリフトしてると言い、ソフトドリフトをしているつもりならソフトドリフトしてると言い、どちらであるか気にしない場合にはハードドリフトかソフトドリフトをしてるなどと言えば良いのではないでしょうか...
+</p>
+
+  <h2>ソフトドリフトと早溜め</h2>
+
+<p>
+一般的に「早溜め」として知られている技術があります。
+これは、ブーストカウンタの増加量が5の状態を維持しながら真横ではなく斜めにスティックを倒しドリフト中の回転半径を大きくする技術となります。また、この時のスティック操作は「斜め入力」と呼ばれているようです。
+</p>
+
+<p>
+要するに、「斜め入力」により「ソフトドリフト」を行うことで、ミニターボ発動可能となるまでの時間を犠牲にすることなく緩やかにコーナーを曲がるテクニックのことを「早溜め」と呼ぶようです。
+</p>
+
+  <h2>ソフトドリフト中の回転半径</h2>
+
+<p>
+ハードドリフトとソフトドリフトを利用することで回転半径を変化させられますが、どの程度回転半径に違いが出るでしょうか？少し調査を行ったので参考にしてください。
+</p>
+
+<p>
+調査はシャーベットランドの水中で行いました。ドリフト開始時の挙動を考えるのは難しかったため、UMTが発動可能な状態までドリフトを維持した状態で計測した回転半径となります。また、ドリフト中の速度はソフトドリフトとハードドリフト全ての場合で同じであるという前提で調べています。ということで、調査の条件をまとめると以下の通りとなります。
+</p>
+
+<table class="def">
+<caption>回転半径の調査条件</caption>
+<tr>
+<td>
+<dl class="def">
+    <dt>排気量</dt><dd>150cc</dd>
+    <dt>場所</dt><dd>シャーベットランドの水中</dd>
+    <dt>計測方法</dt><dd>UMT発動可能状態でのドリフトで一周するのに必要なフレーム数の平均を算出</dd>
+    <dt>車体のカスタム</dt><dd>ロイ, パタテンテン, スカイローラー, かみひこうき</dd>
+    <dt>ミニターボ性能</dt><dd>4.75</dd>
+    <dt>コイン数</dt><dd>0</dd>
+</dl>
+</td>
+</tr>
+</table>
+
+<p>
+ここでは斜め入力については考慮せずに、真右へのスティック入力である(255,128)~(217,128)を維持した状態でドリフトを行い、その結果を表にまとめました。
+</p>
+
+<p>
+表では一周するのにかかったフレーム数と時間の平均を記述してあります。また完全に右に倒した状態(255,128)との一周にかかる時間の比率も記述することで、回転半径の比として算出しました。また、ミニターボが発動可能となる時間までの車体の向きの変化についても算出しました。
+</p>
+
+<div class="note-title"><span class="note-title">調査の条件に注意</span></div>
+<div class="note-body">
+この調査では、ドリフト開始時やドリフト中の挙動の変化等は考慮しておらず、UMT発動可能時でのドリフトのみで調査を行っています。
+また、ドリフト中の速度はソフトドリフトやハードドリフトを含め全て同じであるという前提で調べています。
+さらに、シャーベットランドの水中での調査であるという点にご注意ください。
+</div>
+
+<table class="tdef">
+  <caption>表中の各列の説明</caption>
+  <tr>
+  <td>
+<dl class="tdef">
+    <dt>種類</dt><dd>ドリフトの種類をH(ハードドリフト)、S(ソフトドリフト)で表す</dd>
+    <dt>X</dt><dd>X軸の値</dd>
+    <dt>X</dt><dd>Y軸の値</dd>
+    <dt>斜め入力</dt><dd>等価となる斜め入力の角度</dd>
+    <dt>フレーム数</dt><dd>一周に要した平均フレーム数</dd>
+    <dt>時間(秒)</dt><dd>一周に要した平均時間</dd>
+    <dt>円周比</dt><dd>最小の円との大きさの比率</dd>
+    <dt>Fs(MT)</dt><dd>MT発動可能となるまでのフレーム数</dd>
+    <dt>角度(MT)</dt><dd>MT発動可能となる時の車体の角度</dd>
+    <dt>Fs(SMT)</dt><dd>SMT発動可能となるまでのフレーム数</dd>
+    <dt>角度(SMT)</dt><dd>SMT発動可能となる時の車体の角度</dd>
+    <dt>Fs(UMT)</dt><dd>UMT発動可能となるまでのフレーム数</dd>
+    <dt>角度(UMT)</dt><dd>UMT発動可能となる時の車体の角度</dd>
+</dl>
+</td>
+</tr>
+</table>
+
+<table class="angle" border="1">
+<caption>回転半径の調査結果</caption>
+<tr>
+	<th>種類</th>
+	<th>X</th>
+	<th>Y</th>
+	<th>斜め入力</th>
+	<th>フレーム数</th>
+	<th>時間(秒)</th>
+	<th>円周比</th>
+	<th>Fs(MT)</th>
+	<th>角度(MT)</th>
+	<th>Fs(SMT)</th>
+	<th>角度(SMT)</th>
+	<th>Fs(UMT)</th>
+	<th>角度(UMT)</th>
+</tr>
+<tr class="harddrift"><td>H</td><td>255</td><td>128</td><td>0</td><td>266.603</td><td>4.443</td><td>1</td><td>46</td><td>62.11</td><td>98</td><td>132.33</td><td>150</td><td>202.55</td></tr>
+<tr class="harddrift"><td>H</td><td>254</td><td>128</td><td>7.19</td><td>268.153</td><td>4.469</td><td>1.01</td><td>46</td><td>61.76</td><td>98</td><td>131.57</td><td>150</td><td>201.38</td></tr>
+<tr class="harddrift"><td>H</td><td>253</td><td>128</td><td>10.18</td><td>269.72</td><td>4.495</td><td>1.01</td><td>46</td><td>61.4</td><td>98</td><td>130.8</td><td>150</td><td>200.21</td></tr>
+<tr class="harddrift"><td>H</td><td>252</td><td>128</td><td>12.48</td><td>271.293</td><td>4.522</td><td>1.02</td><td>46</td><td>61.04</td><td>98</td><td>130.04</td><td>150</td><td>199.05</td></tr>
+<tr class="harddrift"><td>H</td><td>251</td><td>128</td><td>14.42</td><td>272.861</td><td>4.548</td><td>1.02</td><td>46</td><td>60.69</td><td>98</td><td>129.3</td><td>150</td><td>197.9</td></tr>
+<tr class="harddrift"><td>H</td><td>250</td><td>128</td><td>16.13</td><td>274.445</td><td>4.574</td><td>1.03</td><td>46</td><td>60.34</td><td>98</td><td>128.55</td><td>150</td><td>196.76</td></tr>
+<tr class="harddrift"><td>H</td><td>249</td><td>128</td><td>17.68</td><td>276.033</td><td>4.601</td><td>1.04</td><td>46</td><td>59.99</td><td>98</td><td>127.81</td><td>150</td><td>195.63</td></tr>
+<tr class="harddrift"><td>H</td><td>248</td><td>128</td><td>19.11</td><td>277.625</td><td>4.627</td><td>1.04</td><td>46</td><td>59.65</td><td>98</td><td>127.08</td><td>150</td><td>194.51</td></tr>
+<tr class="harddrift"><td>H</td><td>247</td><td>128</td><td>20.45</td><td>279.219</td><td>4.654</td><td>1.05</td><td>46</td><td>59.31</td><td>98</td><td>126.35</td><td>150</td><td>193.4</td></tr>
+<tr class="harddrift"><td>H</td><td>246</td><td>128</td><td>21.7</td><td>280.817</td><td>4.68</td><td>1.05</td><td>46</td><td>58.97</td><td>98</td><td>125.63</td><td>150</td><td>192.3</td></tr>
+<tr class="harddrift"><td>H</td><td>245</td><td>128</td><td>22.89</td><td>282.422</td><td>4.707</td><td>1.06</td><td>46</td><td>58.64</td><td>98</td><td>124.92</td><td>150</td><td>191.2</td></tr>
+<tr class="harddrift"><td>H</td><td>244</td><td>128</td><td>24.02</td><td>284.017</td><td>4.734</td><td>1.07</td><td>46</td><td>58.31</td><td>98</td><td>124.22</td><td>150</td><td>190.13</td></tr>
+<tr class="harddrift"><td>H</td><td>243</td><td>128</td><td>25.11</td><td>285.619</td><td>4.76</td><td>1.07</td><td>46</td><td>57.98</td><td>98</td><td>123.52</td><td>150</td><td>189.06</td></tr>
+<tr class="softdrift"><td>S</td><td>242</td><td>128</td><td>26.15</td><td>287.224</td><td>4.787</td><td>1.08</td><td>46</td><td>57.66</td><td>98</td><td>122.83</td><td>150</td><td>188.01</td></tr>
+<tr class="softdrift"><td>S</td><td>241</td><td>128</td><td>27.16</td><td>288.822</td><td>4.814</td><td>1.08</td><td>46</td><td>57.34</td><td>98</td><td>122.15</td><td>150</td><td>186.97</td></tr>
+<tr class="softdrift"><td>S</td><td>240</td><td>128</td><td>28.13</td><td>290.474</td><td>4.841</td><td>1.09</td><td>46</td><td>57.01</td><td>98</td><td>121.46</td><td>150</td><td>185.9</td></tr>
+<tr class="softdrift"><td>S</td><td>239</td><td>128</td><td>29.07</td><td>292.07</td><td>4.868</td><td>1.1</td><td>46</td><td>56.7</td><td>98</td><td>120.79</td><td>150</td><td>184.89</td></tr>
+<tr class="softdrift"><td>S</td><td>238</td><td>128</td><td>29.99</td><td>293.7</td><td>4.895</td><td>1.1</td><td>46</td><td>56.38</td><td>98</td><td>120.12</td><td>150</td><td>183.86</td></tr>
+<tr class="softdrift"><td>S</td><td>237</td><td>128</td><td>30.88</td><td>295.307</td><td>4.922</td><td>1.11</td><td>46</td><td>56.08</td><td>98</td><td>119.47</td><td>150</td><td>182.86</td></tr>
+<tr class="softdrift"><td>S</td><td>236</td><td>128</td><td>31.75</td><td>296.92</td><td>4.949</td><td>1.11</td><td>46</td><td>55.77</td><td>98</td><td>118.82</td><td>150</td><td>181.87</td></tr>
+<tr class="softdrift"><td>S</td><td>235</td><td>128</td><td>32.59</td><td>298.575</td><td>4.976</td><td>1.12</td><td>46</td><td>55.46</td><td>98</td><td>118.16</td><td>150</td><td>180.86</td></tr>
+<tr class="softdrift"><td>S</td><td>234</td><td>128</td><td>33.42</td><td>300.18</td><td>5.003</td><td>1.13</td><td>46</td><td>55.17</td><td>98</td><td>117.53</td><td>150</td><td>179.89</td></tr>
+<tr class="softdrift"><td>S</td><td>233</td><td>128</td><td>34.23</td><td>301.807</td><td>5.03</td><td>1.13</td><td>46</td><td>54.87</td><td>98</td><td>116.9</td><td>150</td><td>178.92</td></tr>
+<tr class="softdrift"><td>S</td><td>232</td><td>128</td><td>35.03</td><td>303.463</td><td>5.058</td><td>1.14</td><td>46</td><td>54.57</td><td>98</td><td>116.26</td><td>150</td><td>177.95</td></tr>
+<tr class="softdrift"><td>S</td><td>231</td><td>128</td><td>35.8</td><td>305.092</td><td>5.085</td><td>1.14</td><td>46</td><td>54.28</td><td>98</td><td>115.64</td><td>150</td><td>177</td></tr>
+<tr class="softdrift"><td>S</td><td>230</td><td>128</td><td>36.57</td><td>306.72</td><td>5.112</td><td>1.15</td><td>46</td><td>53.99</td><td>98</td><td>115.02</td><td>150</td><td>176.06</td></tr>
+<tr class="softdrift"><td>S</td><td>229</td><td>128</td><td>37.32</td><td>308.343</td><td>5.139</td><td>1.16</td><td>46</td><td>53.71</td><td>98</td><td>114.42</td><td>150</td><td>175.13</td></tr>
+<tr class="softdrift"><td>S</td><td>228</td><td>128</td><td>38.06</td><td>309.972</td><td>5.166</td><td>1.16</td><td>46</td><td>53.42</td><td>98</td><td>113.82</td><td>150</td><td>174.21</td></tr>
+<tr class="softdrift"><td>S</td><td>227</td><td>128</td><td>38.78</td><td>311.6</td><td>5.193</td><td>1.17</td><td>46</td><td>53.15</td><td>98</td><td>113.22</td><td>150</td><td>173.3</td></tr>
+<tr class="softdrift"><td>S</td><td>226</td><td>128</td><td>39.5</td><td>313.226</td><td>5.22</td><td>1.17</td><td>46</td><td>52.87</td><td>98</td><td>112.63</td><td>150</td><td>172.4</td></tr>
+<tr class="softdrift"><td>S</td><td>225</td><td>128</td><td>40.2</td><td>314.83</td><td>5.247</td><td>1.18</td><td>46</td><td>52.6</td><td>98</td><td>112.06</td><td>150</td><td>171.52</td></tr>
+<tr class="softdrift"><td>S</td><td>224</td><td>128</td><td>40.9</td><td>316.422</td><td>5.274</td><td>1.19</td><td>46</td><td>52.34</td><td>98</td><td>111.5</td><td>150</td><td>170.66</td></tr>
+<tr class="softdrift"><td>S</td><td>223</td><td>128</td><td>41.58</td><td>318.028</td><td>5.3</td><td>1.19</td><td>46</td><td>52.07</td><td>98</td><td>110.93</td><td>150</td><td>169.8</td></tr>
+<tr class="softdrift"><td>S</td><td>222</td><td>128</td><td>42.26</td><td>319.663</td><td>5.328</td><td>1.2</td><td>46</td><td>51.8</td><td>98</td><td>110.37</td><td>150</td><td>168.93</td></tr>
+<tr class="softdrift"><td>S</td><td>221</td><td>128</td><td>42.92</td><td>321.26</td><td>5.354</td><td>1.21</td><td>46</td><td>51.55</td><td>98</td><td>109.82</td><td>150</td><td>168.09</td></tr>
+<tr class="softdrift"><td>S</td><td>220</td><td>128</td><td>43.58</td><td>322.886</td><td>5.381</td><td>1.21</td><td>46</td><td>51.29</td><td>98</td><td>109.26</td><td>150</td><td>167.24</td></tr>
+<tr class="softdrift"><td>S</td><td>219</td><td>128</td><td>44.23</td><td>324.495</td><td>5.408</td><td>1.22</td><td>46</td><td>51.03</td><td>98</td><td>108.72</td><td>150</td><td>166.41</td></tr>
+<tr class="drift"><td></td><td>218</td><td>128</td><td>44.87</td><td>326.102</td><td>5.435</td><td>1.22</td><td>115</td><td>126.95</td><td>245</td><td>270.47</td><td>375</td><td>413.98</td></tr>
+<tr class="drift"><td></td><td>217</td><td>128</td><td>45.51</td><td>327.713</td><td>5.462</td><td>1.23</td><td>115</td><td>126.33</td><td>245</td><td>269.14</td><td>375</td><td>411.95</td></tr>
+
+</table>
+
+<p>
+早溜めのための斜め入力は30度と言われることもあるようです。しかし、30度と45度近くの入力による回転半径や車体の向きを比較すると無視できない程度の違いがあるのではないかと思えてきます。斜め入力を使いこなしている人に意見を聞いてみたいところです。
+</p>
+
+  <h2>ソフトドリフトの活用</h2>
+
+<p>
+ここでは、ソフトドリフトを利用するとどのようなコーナリングが可能か少し考えてみたいと思います。実際にどのように走れば良いかという内容ではありませんので、鵜呑みにせずコーナリングの参考にしていただければと思います。
+</p>
+
+<p>
+普通に左右にスティックを倒してドリフトで曲がろうとしても、ほとんどのコーナーでは曲がりすぎてしまうのではないでしょうか？仕方がないので外側にスティックを倒してカウンターを当てて曲がりすぎを修正する必要があります。このカウンターを当てている間はブーストカウンタの増加量が小さくなるため、ミニターボが発動可能になるまでの時間は少し長くなってしまいます。
+</p>
+
+<p>
+ソフトドリフトを利用するとどうなるでしょうか？ソフトドリフトを利用すると回転半径が大きくなりコーナーでの曲がりすぎを少なくできます。うまくいけばハードドリフトとソフトドリフトを上手にコントロールすることで理想的なラインをトレースすることで、コーナーをより早く抜けることが可能かもしれません。さらに、カウンターを当てる量が減るためブーストカウンタの増加量が大きい状態を長時間維持でき、ミニターボの発動を早めに行うことが可能になります。また、ドリフトの時間を長くすることで一段上のミニターボを発動可能にもできます。さらに、回転半径は大きいけどブーストカウンタが閾値を超えるまでの時間は同じなので車体が内側に向きすぎるのを抑制することにもなります。
+</p>
+
+<table class="usage">
+  <tr>
+    <th>ハードドリフトのみ</th>
+    <th>ハードドリフト+カウンタードリフト</th>
+    <th>ソフトドリフト弱</th>
+  </tr>
+  <tr>
+    <td><img src="images/hd1.jpg" class="usage"></td>
+    <td><img src="images/hdcd1.jpg" class="usage"></td>
+    <td><img src="images/sd1.jpg" class="usage"></td>
+  </tr>
+</table>
+
+<p>
+もちろんソフトドリフトを利用して一段上のミニターボを発動させることが常に有効かどうかは議論の余地がありそうです。例えば、ハードドリフトを利用するとラインを完全にトレースできるコーナーを考えてみます。ただし、このハードドリフトではSMTまでしか発動できないとします。ソフトドリフトを利用した場合、たとえUMTまで溜まられるとしてもどうしてもラインがアウトに膨らんでしまいます。その分コーナー全体を曲がるための時間がかかるため、たとえUMTを発動したとしてもその差を埋められない可能性が高いのではないかと思います。
+</p>
+
+<table class="usage">
+  <tr>
+    <th>ハードドリフトのみ</th>
+    <th>ソフトドリフト強</th>
+    <th>ソフトドリフト弱</th>
+  </tr>
+  <tr>
+    <td><img src="images/hd2.jpg" class="usage"></td>
+    <td><img src="images/sdw2.jpg" class="usage"></td>
+    <td><img src="images/sds2.jpg" class="usage"></td>
+  </tr>
+</table>
+
+<p>
+ラインのトレースという点ではハードドリフトとソフトドリフト、また必要に応じてカウンタードリフトを組み合わせるのが有効だと思います。TAでは理想のラインだけで走れば良さそうですが、実際のレースではラインの撮り方によっては他の人が付けている防御アイテムを避けたり、アイテムボックスに早くたどり着くためにターボを早めに発動したり、無理やり一瞬だけ他の人の前に出て自分の防御アイテムをなすりつけたり、逆に相手の後ろに下がりながら攻撃を避けつつブーストカウンタをしっかり溜めておくなど、考えるべきことがたくさんありそうです。また、コーナーにイン側から入るかアウト側から入るか、イン側に抜けるかアウト側に抜けるか、またその時の車体の向きをどうするのかといったことも重要になりそうです。こういったノウハウは上手な人に聞くのが一番だとは思いますが、自分でも色々と考えてみるのは楽しいのではないかと思います。
+</p>
+
+<table class="usage">
+  <tr>
+    <th>ハードドリフト<br>+ソフトドリフト弱</th>
+    <th>ソフトドリフト弱<br>+ハードドリフト</th>
+    <th>ソフトドリフト強</th>
+    <th>ソフトドリフト弱</th>
+  </tr>
+  <tr>
+    <td><img src="images/hdsd3.jpg" class="usage2"></td>
+    <td><img src="images/sdhd3.jpg" class="usage2"></td>
+    <td><img src="images/sds3.jpg" class="usage2"></td>
+    <td><img src="images/sdw3.jpg" class="usage2"></td>
+  </tr>
+</table>
+
+<p>
+もちろん、コーナー中でのミニターボ発動や着地ドリフトの利用、ニュートラルドリフトでの走行などなど、他にも色々と考慮すべき点は多いと思います。もしもコーナリングについてあまり考えたことがないようであれば、ここで説明した内容を参考にソフトドリフトも含めた色々なコーナリングの方法を考えて試してみていただければと思います。
+</p>
+
+<h1 id="ch4" class="main">調査内容の詳細</h1>
+
+<p>
+ここでは調査内容の詳細について説明します。どのような調査を行ったか興味があればご一読ください。
+</p>
+
+<p>
+<div style="width:100%; text-align:center;0">
+  <img src="images/mark_koujichu.png" width="60px" alt="工事中">
+</div>
+</p>
+
+<!--
+  <h2>ミニターボが発動可能となるまでの時間に関する調査</h2>
+
+それぞれ指定したスティック操作でドリフトを開始しを行い、ウルトラミニターボが溜まり終わるまでの時間を動画をキャプチャしてフレーム数を数えることで算出しました。ドリフトの開始はタイヤから煙が出る瞬間としました。またミニターボ値が溜まった瞬間に現れると思われるエフェクトをウルトラミニターボ発動可能となった瞬間として計測しました。ここではいくつかの例を提示します。
+
+(255,128): [座標の絵] [動画]
+
+  <h2>ソフトドリフト中の回転半径に関する調査</h2>
+
+それぞれ指定したスティック操作でドリフトを開始しを行い、ウルトラミニターボが発動可能となる段階までドリフトを維持し、その状態で一周するのに必要な時間を動画をキャプチャしてフレーム数を数えることで算出しました。一周については逆周警告ジュゲムの出現を基準にしています。ここではいくつかの例を提示します。
+
+(255,128): [座標の絵] [動画]
+
+-->
+
+<h1 id="ch5" class="main">まとめ</h1>
+
+<p>
+このページではマリオカート8デラックスにおけるソフトドリフトの定義と操作方法について説明しました。
+また、斜め入力でソフトドリフトを実現するのが現実的であり、そのためのスティック入力の角度は45度未満であるということを説明しました。
+さらにソフトドリフト中の回転半径と車体の向きに関する調査についての説明も行いました。
+</p>
+
+<p>
+以上、ソフトドリフトを理解することでマリオカート8デラックスをより楽しんでいただければと思います！
+</p>
+
+<!--
+<hr>
+参考文献
+<ol>
+  <li><a id="ref1" href="https://github.com/dekuNukem/Nintendo_Switch_Reverse_Engineering">A look at inner workings of Joycon and Nintendo Switch</a></li>
+  <li><a id="ref2" href="https://www.mariowiki.com/Mario_Kart_8_Deluxe_in-game_statistics">Mario Kart 8 Deluxe in-game statistics</a></li>
+  <li><a id="ref3" href="https://docs.google.com/spreadsheets/d/1g7A-38tn9UAIbB2B3sZI-MpILsS3ZS870UTVMRRxh4Q/edit#gid=0">Luigi_Fan2's Mario Kart 8 Deluxe Stat Chart</a></li>
+  <li><a id="ref4" href="https://www.youtube.com/watch?time_continue=3&v=JMmDEup47JE">[MK8DX] ターボを溜める</a></li>
+<ol>
+-->
+
+</div>
+
+<div class="bottom"></div>
+
 </body>
 </html>
