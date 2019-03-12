@@ -290,6 +290,14 @@ table.mt-time, table.mt-time td, table.mt-time th {
   text-align: center;
 }
 
+.first-row-data {
+  border-top-style: double;
+}
+
+th.dur {
+  width: 5em;
+}
+
 table.mt-ex, table.mt-ex td, table.mt-ex th {
   border-collapse: collapse;
   border: 1px #000000 solid;
@@ -300,15 +308,15 @@ tr.bcount {
   font-weight: bold;
 }
 
-td.mt {
+td.mt, th.mt {
   background-color: #bbbbff
 }
 
-td.smt {
+td.smt, th.smt {
   background-color: #ffc533
 }
 
-td.umt {
+td.umt, th.umt {
   background-color: #ffaaff
 }
 

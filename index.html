@@ -260,7 +260,7 @@
     <th>SMT閾値</th>
     <th>UMT閾値</th>
 </tr>
-<tr><td>1.00</td><td>280</td><td>590</td><td>900</td></tr>
+<tr class="first-row-data"><td>1.00</td><td>280</td><td>590</td><td>900</td></tr>
 <tr><td>1.25</td><td>278</td><td>586</td><td>894</td></tr>
 <tr><td>1.50</td><td>276</td><td>582</td><td>888</td></tr>
 <tr><td>1.75</td><td>274</td><td>578</td><td>882</td></tr>
@@ -286,23 +286,23 @@
 <td>
 
 <table class="mt-time">
-  <caption>ミニターボが発動可能になるまでの時間</caption>
- <tr>
+<caption>ミニターボが発動可能になるまでの時間</caption>
+<tr>
   <th rowspan="2">ミニターボ性能</th>
   <th colspan="3">ブーストカウンタ増加量2</th>
   <th colspan="3">ブーストカウンタ増加量5</th>
- </tr>
- <tr>
-  <th>MT</th>
-  <th>SMT</th>
-  <th>UMT</th>
-  <th>MT</th>
-  <th>SMT</th>
-  <th>UMT</th>
+</tr>
+<tr>
+  <th class="dur">MT</th>
+  <th class="dur">SMT</th>
+  <th class="dur">UMT</th>
+  <th class="dur">MT</th>
+  <th class="dur">SMT</th>
+  <th class="dur">UMT</th>
 </tr>
 
 <!-- 60fps -->
-<tr><td>1.00</td><td>2.333秒</td><td>4.917秒</td><td>7.500秒</td><td>0.933秒</td><td>1.967秒</td><td>3.000秒</td></tr>
+<tr class="first-row-data"><td>1.00</td><td>2.333秒</td><td>4.917秒</td><td>7.500秒</td><td>0.933秒</td><td>1.967秒</td><td>3.000秒</td></tr>
 <tr><td>1.25</td><td>2.317秒</td><td>4.883秒</td><td>7.450秒</td><td>0.927秒</td><td>1.953秒</td><td>2.980秒</td></tr>
 <tr><td>1.50</td><td>2.300秒</td><td>4.850秒</td><td>7.400秒</td><td>0.920秒</td><td>1.940秒</td><td>2.960秒</td></tr>
 <tr><td>1.75</td><td>2.283秒</td><td>4.817秒</td><td>7.350秒</td><td>0.913秒</td><td>1.927秒</td><td>2.940秒</td></tr>
@@ -322,8 +322,6 @@
 <tr><td>5.25</td><td>1.800秒</td><td>3.850秒</td><td>5.900秒</td><td>0.720秒</td><td>1.540秒</td><td>2.360秒</td></tr>
 <tr><td>5.50</td><td>1.733秒</td><td>3.717秒</td><td>5.700秒</td><td>0.693秒</td><td>1.487秒</td><td>2.280秒</td></tr>
 <tr><td>5.75</td><td>1.667秒</td><td>3.583秒</td><td>5.500秒</td><td>0.667秒</td><td>1.433秒</td><td>2.200秒</td></tr>
-
-
 </table>
 
 </td>
@@ -761,6 +759,16 @@
   <tr><td><a href="images/plot_all.png" target="_blank"><img src="images/plot_all.png" class="plot"></a></td></tr>
 </table>
 
+
+<p>
+もちろん操作の遊びがありますので、スティックを倒し切らなくても最大値、最小値を出力することができます。例えば下図でスティックの位置が操作の遊びの範囲にある場合には、スティックから出力される座標は全て同じ(255,128)になります。
+</p>
+
+<table class="figure">
+  <caption>スティックの位置と操作の遊びの例</caption>
+  <tr><td><a href="images/output_outside.jpg" target="_blank"><div class="output_outside"><img class="output_outside" src="images/output_outside.jpg" width="50%"></div></a></td></tr>
+</table>
+
 <div class="note-title"><span class="note-title">デッドゾーンについて</span></div>
 <div class="note-body">
 本ページではデッドゾーンについては考慮せずに説明していますが、実際に操作をする時にはデッドゾーンについて考える必要があるかもしれません。
@@ -783,16 +791,6 @@
 <br>
 「スティックの補正」画面でアナログスティックを正確に右に倒しきり、そこで微妙に上下に操作した時に少し引っかかりがあるコントローラが存在すると思います。その場合にはX軸、Y軸の全域でデッドゾーンが実装されているコントローラであると考えられます。一方ジョイコンやプロコンでは非常に滑らかに動作することが確認できます。
 </div>
-
-
-<p>
-もちろん操作の遊びがありますので、スティックを倒し切らなくても最大値、最小値を出力することができます。例えば下図でスティックの位置が操作の遊びの範囲にある場合には、スティックから出力される座標は全て同じ(255,128)になります。
-</p>
-
-<table class="figure">
-  <caption>スティックの位置と操作の遊びの例</caption>
-  <tr><td><a href="images/output_outside.jpg" target="_blank"><div class="output_outside"><img class="output_outside" src="images/output_outside.jpg" width="50%"></div></a></td></tr>
-</table>
 
 <h2>ハードドリフトとソフトドリフトの条件</h2>
 
