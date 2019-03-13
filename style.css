@@ -190,12 +190,28 @@ div.output_outside {
   height: 480px;
   overflow: hidden;
   position: relative;
+  border: 1px solid #888888;
 }
 
 img.output_outside {
-  width: 800px;
-  left: -70px;
-  top: -210px;
+  width: 1024px;
+  left: -320px;
+  top: 0;
+  position: absolute;
+}
+
+div.output_normalize {
+  width: 640px;
+  height: 600px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #888888;
+}
+
+img.output_normalize {
+  width: 1024px;
+  left: -340px;
+  top: -20px;
   position: absolute;
 }
 
