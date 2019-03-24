@@ -215,6 +215,21 @@ img.output_normalize {
   position: absolute;
 }
 
+div.output_normalize_outside {
+  width: 640px;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #888888;
+}
+
+img.output_normalize_outside {
+  width: 1024px;
+  left: -340px;
+  top: -20px;
+  position: absolute;
+}
+
 /*
 h2 {
   counter-reset: section;
