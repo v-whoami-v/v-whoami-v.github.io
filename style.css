@@ -230,6 +230,52 @@ img.output_normalize_outside {
   position: absolute;
 }
 
+div.border_rounding {
+  width: 640px;
+  height: 580px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #888888;
+}
+
+img.border_rounding {
+  width: 1024px;
+  left: -260px;
+  top: -80px;
+  position: absolute;
+}
+
+div.border_lower_left {
+  width: 640px;
+  height: 540px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #888888;
+}
+
+img.border_lower_left {
+  width: 1024px;
+  left: -40px;
+  top: -180px;
+  position: absolute;
+}
+
+div.border_lower_left_normalize {
+  width: 640px;
+  height: 540px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #888888;
+}
+
+img.border_lower_left_normalize {
+  width: 1024px;
+  left: -40px;
+  top: -180px;
+  position: absolute;
+}
+
+
 /*
 h2 {
   counter-reset: section;
@@ -252,6 +298,7 @@ div.note-body {
   border: 1px solid #0000FF;
   padding: 10px;
   margin-bottom: 30px;
+  text-indent: 1em;
 }
 
 .note {
@@ -295,6 +342,8 @@ table.plot, table.plot td, table.plot th {
 
 table.angle, table.angle td, table.angle th {
   text-align: center;
+  border: solid 1px #000000;
+  border-collapse: collapse;
 }
 
 table.figure, table.figure td, table.figure th {
@@ -368,6 +417,11 @@ ul.sddef {
   font-size: 1.2em;
 }
 
+ul.angle_error {
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+
 img.plot {
   width: 80%;
 }
@@ -395,3 +449,109 @@ h3::before {
   content: "(" counter(section) ") ";
 }
 */
+
+table.equipment {
+  width: 1024px;
+  table-layout: fixed;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+table.equipment, table.equipment td, table.equipment th {
+  white-space: normal;
+  overflow-wrap: break-all;
+  border-collapse: collapse;
+  border: 1px #000000 solid;
+  text-align: center;
+}
+
+table.equipment td.desc {
+  text-align: left;
+}
+
+table.geninput {
+  width: 512px;
+  table-layout: fixed;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+table.geninput, table.geninput td, table.geninput th {
+  white-space: normal;
+  overflow-wrap: break-all;
+  border-collapse: collapse;
+  border: 1px #000000 solid;
+  text-align: center;
+}
+
+table.geninput td.desc {
+  text-align: left;
+}
+
+div.term pre {
+  margin-left: 10%;
+  width: 80%;
+  border: solid;
+  border: solid 1px black;
+}
+
+div.script pre {
+  margin-left: 10%;
+  width: 80%;
+  border: solid 1px green;
+}
+
+div.rule pre {
+  margin-left: 30%;
+  width: 40%;
+  border: solid 1px green;
+}
+
+ul.testenv {
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+
+h2 {
+  text-decoration: underline;
+}
+
+span.input {
+  font-weight: bold;
+}
+
+span.invisible {
+  font-weight: bold;
+  font-style: oblique;
+}
+
+span.caution {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+table.login {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  border-collapse: collapse;
+}
+
+table.login td {
+  border: solid;
+  border: 1px solid black;
+}
+
+table.login td.name {
+  width: 40%;
+  text-align: center;
+}
+
+table.login td.value {
+  text-align: center;
+}
