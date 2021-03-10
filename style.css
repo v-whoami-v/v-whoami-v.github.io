@@ -516,6 +516,11 @@ ul.testenv {
   font-size: 1.2em;
 }
 
+ol.testenv {
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+
 h2 {
   text-decoration: underline;
 }
@@ -554,4 +559,8 @@ table.login td.name {
 
 table.login td.value {
   text-align: center;
+}
+
+div.term {
+  text-indent: 0em;
 }
