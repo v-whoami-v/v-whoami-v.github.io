@@ -21,7 +21,7 @@
 <div class="author">
 <span class="author">著者: <a href="https://twitter.com/v_whoami_v">whoami</a></span>
 <br>
-<span class="date">初稿公開日: 2021年xx月xx日</span>
+<span class="date">公開日: 2021年3月xx日</span>
 <br>
 </div>
 
@@ -29,8 +29,8 @@
 <ol>
 <li><a href="#ch1">はじめに</a></li>
 <li><a href="#ch2">調査方法概要</a></li>
-<li><a href="#ch3">必要な機材</a></li>
-<li><a href="#ch4">セットアップ</a></li>
+<li><a href="#ch3">必要機材</a></li>
+<li><a href="#ch4">セットアップ方法</a></li>
 <li><a href="#ch5">プログラム実行方法</a></li>
 <li><a href="#ch6">調査例</a></li>
 <li><a href="#ch7">まとめ</a></li>
@@ -52,35 +52,35 @@
 <h1 id="ch2" class="main">調査方法概要</h1>
 
 <p>
-コントローラのアナログスティックを正確に倒すのは基本的に不可能だと思います。また正確に調べられたとしてもコントローラの種類や個体差によって出力データに差異が生じることが考えられます。そこで、コントローラとSwitch本体の間でやりとりされているデータを直接利用することにしました。あまり手間をかけたくないということで、USB接続でプロキシ動作するものがないか検索したところ、<a href="https://github.com/usb-tools/USBProxy-legacy">USBProxy</a>や<a href="https://github.com/usb-tools/Facedancer">Facedancer</a>が見つかりました。今回はUSBProxyを利用してUSBコントローラとSwitchの間でデータ変換を行い正確なアナログスティックの値をSwitchに出力するようにしました。
+コントローラのアナログスティックを正確に倒すのは基本的に不可能だと思います。また正確に調べられたとしてもコントローラの種類や個体差によって出力データに差異が生じることが考えられます。そこで、コントローラとSwitch本体の間でやりとりされているデータを直接利用することにしました。あまり手間をかけたくないということで、USB接続でプロキシ動作するものがないか検索したところ、<a href="https://github.com/usb-tools/USBProxy-legacy">USBProxy</a>や<a href="https://github.com/usb-tools/Facedancer">Facedancer</a>が見つかりました。今回はUSBProxyに変更を加えてUSBコントローラとSwitchの間でデータ変換を行い正確なアナログスティックの値をSwitchに出力するような<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を作成して利用しました。
 </p>
 
 <div class="note-title"><span class="note-title">Facedancerについて</span></div>
 <div class="note-body">
-FacedancerにはSwitchのプロコンを模擬するデモプログラムが添付されています。<a href="https://greatscottgadgets.com/greatfet/one/">GreatFET One</a>とデモプログラムを用いることでSwitchからプロコンだと認識されることまでは確認しました。それ以上の確認は行っていませんが、このプログラムを改造することで正確に制御されたコントローラ出力を行うことも可能だと思います。
+FacedancerにはSwitchのプロコンを模擬するデモプログラムが添付されています。<a href="https://greatscottgadgets.com/greatfet/one/">GreatFET One</a>とデモプログラムを用いることでSwitchからプロコンだと認識されることまでは確認しました。それ以上の確認は行っていませんが、このプログラムを改造することでより正確に制御されたコントローラ出力を行うことが可能かもしれません。
 </div>
 
 
 <p>
-ここで実現するシステムは以下の図のようにコントローラから送信されたデータをUSBProxyが受信し、必要に応じてそのデータを変換しSwitchに送信します。これにより、正確に制御されたコントローラ出力を実現します。
+ここで実現するシステムは以下の図のようにコントローラから送信されたデータを<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>が受信し、必要に応じてそのデータを変換しSwitchに送信します。これにより、正確に制御されたコントローラ出力を実現します。
 </p>
 
 <div style="text-align:center;"><img src="images/usbproxy.jpg" height="240"></div>
 
-<h1 id="ch3" class="main">必要な機材</h1>
+<h1 id="ch3" class="main">必要機材</h1>
 
 <p>
-今回は以下の機器を準備し利用しました。PCはブロードバンドルータからIPアドレスを割り当てられてインターネット接続が可能であるとして説明を行います。
+今回は以下の機器を準備し利用しました。PCはブロードバンドルータからIPアドレスを割り当てられてインターネット接続が可能であるものとします。
 </p>
 
 <table class="equipment">
-<tr><td width="30%">機器</td><td>説明</td><td width="20%">写真</td></tr>
-<tr><td><a href="https://beagleboard.org/black">BeagleBone Black</a></td><td class="desc">ARM Cortex-A8プロセッサを利用したシングルボードコンピュータです。USBProxyを動作させてホリパッドとSwitchの間でデータの変換を行います。</td><td><a href="images/beagleboneblack.jpg" data-title="" data-lightbox="equipment"><img src="images/beagleboneblack.jpg" height="100"></a></td></tr>
-<tr><td><a href="https://www.nintendo.co.jp/hardware/switch/">Nintendo Switchとドック</a></td><td class="desc">BeagleBone BlackとUSB接続を行うのでドックを利用します。もちろんディスプレイも準備します。インターネット接続は不要です。</td><td><a href="images/switch.jpg" data-title="" data-lightbox="equipment"><img src="images/switch.jpg" height="70"></a></td></tr>
+<tr><td style="width:30%;">機器</td><td>説明</td><td style="width:20%;">写真</td></tr>
+<tr><td><a href="https://beagleboard.org/black">BeagleBone Black</a></td><td class="desc">ARM Cortex-A8プロセッサを搭載したシングルボードコンピュータです。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を動作させてホリパッドとSwitchの間でデータの変換を行います。</td><td><a href="images/beagleboneblack.jpg" data-title="" data-lightbox="equipment"><img src="images/beagleboneblack.jpg" height="100"></a></td></tr>
+<tr><td><a href="https://www.nintendo.co.jp/hardware/switch/">Nintendo Switchとドック</a></td><td class="desc">BeagleBone BlackとUSB接続を行うのでドックを利用します。もちろんディスプレイも準備します。ここで紹介する実験を行うだけであればインターネット接続は不要です。</td><td><a href="images/switch.jpg" data-title="" data-lightbox="equipment"><img src="images/switch.jpg" height="70"></a></td></tr>
 <tr><td>PC</td><td class="desc">MicroSDカードへのOSインストールやBeagleBone Blackの遠隔操作に利用します。MicroSDカードへのディスクイメージの書き込みやsshでのリモートログインが可能であればWindowsやMacでも問題ありませんが、ここではLinux(<a href="https://jp.ubuntu.com">Ubuntu 20.04</a>など)を利用するものとして説明します。またブロードバンドルータを介してインターネットに接続できるものとします。もしもMicroSDカードを直接利用できない場合には別途紹介しているMicroSDカード対応のUSBアダプタなども準備しておきます。</td><td><a href="images/pc.jpg" data-title="" data-lightbox="equipment"><img src="images/pc.jpg" height="150"></a></td></tr>
 <tr><td>MicroSDカード (1GB以上)</td><td class="desc">BeagleBone Black向けのOSをインストールして利用します。</td><td><a href="images/microsd.jpg" data-title="" data-lightbox="equipment"><img src="images/microsd.jpg" height="50"></a></td></tr>
 <tr><td>MicroSDカードの変換アダプタ<br>USB接続のSDカードアダプタ</td><td class="desc">PCにMicroSDカードのスロットが存在しない場合に必要に応じて利用します。</td><td><a href="images/adapter.jpg" data-title="" data-lightbox="equipment"><img src="images/adapter.jpg" height="100"></a></td></tr>
-<tr><td><a href="https://hori.jp/products/nsw/horipad_bl/">ホリパッド for Nintendo Switch</a></td><td class="desc">BeagleBone Blackに接続して実際の操作を行います。</td><td><a href="images/horipad.jpg" data-title="" data-lightbox="equipment"><img src="images/horipad.jpg" height="100"></a></td></tr>
+<tr><td><a href="https://hori.jp/products/nsw/horipad_bl/">ホリパッド for Nintendo Switch</a></td><td class="desc">BeagleBone Blackに接続してUSBProxyに制御データを送信します。ここでは<a href="https://hori.jp/products/nsw/horipad_bl/">ブルーのホリパッド</a>を利用しますが、<a href="https://hori.jp/products/nsw/horipad/">標準色(ブラック)</a>での動作実績もあります。</td><td><a href="images/horipad.jpg" data-title="" data-lightbox="equipment"><img src="images/horipad.jpg" height="100"></a></td></tr>
 <tr><td>USBケーブル(Type A - Mini Type B)</td><td class="desc">BeagleBone BlackとSwitchのドックへの接続に利用します。電源だけではなく信号もちゃんと送ることができるケーブルが必要です。</td><td><a href="images/usbcable.jpg" data-title="" data-lightbox="equipment"><img src="images/usbcable.jpg" height="100"></a></td></tr>
 <tr><td>ネットワークケーブル</td><td class="desc">BeagleBone Blackのネットワーク接続に利用します。</td><td><a href="images/netcable.jpg" data-title="" data-lightbox="equipment"><img src="images/netcable.jpg" height="100"></a></td></tr>
 <tr><td>ブロードバンドルータ</td><td class="desc">BeagleBone BlackとPCのネットワーク接続に利用します。DHCPサーバとして動作しローカルエリアネットワーク内の機器のIPアドレス割り当て行います。また、NAT機能によりローカルエリアネットワークの機器からインターネットへの接続を実現します。もちろん、ブロードバンドルータを利用しない方法もありますがここでは説明しません。</td><td><a href="images/router.jpg" data-title="" data-lightbox="equipment"><img src="images/router.jpg" height="120"></a></td></tr>
@@ -92,31 +92,31 @@ USB接続のコントローラとしてホリパッドを利用しました。�
 </div>
 
 <p>
-whoami版USBProxyを利用して実験を行う際の接続は以下の通りになります。
+<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を利用して実験を行う際の接続は以下の通りになります。
 </p>
 
 <div style="text-align:center;"><img src="images/overview.jpg" height="480"></div>
 
 
-<h1 id="ch4" class="main">セットアップ</h1>
+<h1 id="ch4" class="main">セットアップ方法</h1>
 
 <p>
-ここではwhoami版USBProxyのセットアップ方法について説明します。行う作業は以下の２つです。
+ここでは<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>のセットアップ方法について説明します。行う作業は以下の２つです。
 </p>
 
-<ul class="testenv">
+<ol class="testenv">
 <li>MicroSDカードにOSイメージをコピー</li>
 <li>whoami版USBProxyのインストール</li>
-</ul>
+</ol>
 
 <p>
-作業はBeagleBone BlackとPC(Linux)で行うことを前提として説明します。最初はPCでの作業となるためBeagleBone Blackの電源は接続しないでおきます。
+作業はBeagleBone BlackとPC(Linux)で行います。また、最初はPCでの作業となるためBeagleBone Blackの電源は接続しないでおきます。
 </p>
 
-<h2>MicroSDカードにOSイメージをコピー</h2>
+<h2>1. MicroSDカードにOSイメージをコピー</h2>
 
 <p>
-PCを利用して<a href="https://github.com/usb-tools/USBProxy-legacy/releases/tag/2014-03-R1">USBProxyのリリースページ</a>からOSイメージ(Debian-USBProxy.img.xz)をダウンロードします。ファイルは~/Downloadsにダウンロードしたものとします。xz形式で圧縮されているのでunxzコマンド等で展開しておきます。
+PCを利用して<a href="https://github.com/usb-tools/USBProxy-legacy/releases/tag/2014-03-R1">USBProxyのリリースページ</a>からOSイメージ(Debian-USBProxy.img.xz)をダウンロードします。ファイルは~/Downloadsにダウンロードしたものとします。xz形式で圧縮されているので<code>unxz</code>コマンド等で展開しておきます。
 </p>
 
 <div class="term"><pre><code>user@pc:~$ <span class="input">cd Downloads</span>
@@ -157,9 +157,8 @@ user@pc:~/Downloads$ <span class="input">sudo umount /media/user/SDCARD</span>
 user@pc:~/Downloads$ 
 </code></pre></div>
 
-
 <p>
-ddコマンドを利用して先程ダウンロードして展開したディスクイメージをMicroSDカードに書き込みます。上記の例ではMicroSDカードを挿入した時に追加されたファイルである/dev/sdbがMicroSDカードを表すファイルとなります。このファイル名は環境によって異なる可能性があります。<span class="caution">以下のようにddコマンドを実行する際には/dev/sdbを適切なファイル名に置き換えて十分注意して実行してください！間違ったファイル名を指定すると他のHDDやSSDのデータが完全に失われる可能性があります！</span>この作業に自信がないようであれば<a href="https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/">Raspberry Pi Imager</a>のようなGUIツールを利用することをおすすめします。
+<code>dd</code>コマンドを利用して先程ダウンロードして展開したディスクイメージをMicroSDカードに書き込みます。上記の例ではMicroSDカードを挿入した時に追加されたファイルである/dev/sdbがMicroSDカードを表すファイルとなります。このファイル名は環境によって異なる可能性があります。<span class="caution">以下のようにddコマンドを実行する際には/dev/sdbを適切なファイル名に置き換えて十分注意して実行してください！間違ったファイル名を指定すると他のHDDやSSDのデータが完全に失われる可能性があります！</span>この作業に自信がないようであれば<a href="https://www.raspberrypi.org/software/">Raspberry Pi Imager</a>のようなGUIツールを利用することをおすすめします。
 </p>
 
 <div class="term"><pre><code>user@pc:~/Downloads$ <span class="input">sudo dd if=Debian-USBProxy.img of=/dev/sdb bs=1M</span>
@@ -171,13 +170,24 @@ user@pc:~/Downloads$
 </code></pre></div>
 
 <p>
-ddコマンドは少し時間(数分程度)がかかりますので、コマンド終了までのんびり待ちます。
+<code>dd</code>コマンドは少し時間(数分程度)がかかりますので、コマンド終了までのんびり待ちます。
 </p>
 
-<h2>USBProxyのセットアップ</h2>
+<div class="note-title"><span class="note-title">sudoコマンド</span></div>
+<div class="note-body">
+上記の例では<code>umount</code>や<code>dd</code>コマンドの実行に<code>sudo</code>コマンドを利用しています。<code>sudo</code>は一時的にスーパーユーザー権限でコマンドを実行するためによく利用されるコマンドです。以下の説明でも必要に応じて<code>sudo</code>コマンドを利用しています。
+</div>
+
+<div class="note-title"><span class="note-title">Raspberry Pi Imager</span></div>
+<div class="note-body">
+<a href="https://www.raspberrypi.org/software/">Raspberry Pi Imager</a>は<a href="https://www.raspberrypi.org">Raspberry Pi</a>用のOSのディスクイメージをMicroSDカードに書き込むためのツールですが、任意のディスクイメージを書き込む機能も備えています。
+</div>
+
+
+<h2>2. USBProxyのセットアップ</h2>
 
 <p>
-OSイメージをコピーしたMicroSDカードをPCから取り出しBeagleBone BlackのMicroSDカードスロットに挿入します。BeagleBone Blackとブロードバンドルータをネットワークケーブルで接続します。最後にUSBケーブルをSwitchのドックに接続することで電源を入れます。しばらくするとBeagleBone Blackが正常に起動し、PCからBeagleBone Blackにリモートログインできるようになります。BeagleBone Blackのホスト名は"arm.local"、ユーザIDは"debian"、パスワードは"temppwd"になっています。
+BeagleBone Blackが電源に接続していないことを確認します。OSイメージをコピーしたMicroSDカードをPCから取り出しBeagleBone BlackのMicroSDカードスロットに挿入します。BeagleBone Blackとブロードバンドルータをネットワークケーブルで接続します。最後にUSBケーブルをSwitchのドックに接続することで電源を入れます。しばらくするとBeagleBone Blackが正常に起動し、PCからBeagleBone Blackにリモートログインできるようになります。リモートログインにはSSHプロトコル対応のアプリケーションが必要です。ここでは<code>ssh</code>コマンドを利用します。その時に利用するBeagleBone Blackのホスト名は"arm.local"、ユーザIDは"debian"、パスワードは"temppwd"になります。
 </p>
 
 <table class="login">
@@ -201,7 +211,7 @@ debian@arm:~$
 </code></pre></div>
 
 <p>
-すでにインストール済みのUSBProxyをwhoami版に置き換えます。
+以下のような作業を行い、インストール済みのUSBProxyを<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>に置き換えます。
 </p>
 
 <div class="term"><pre><code>debian@arm:~$ <span class="input">mv USBProxy USBProxy.orig</span>
@@ -220,7 +230,7 @@ debian@arm:~/USBProxy/src$
 </code></pre></div>
 
 <p>
-これでUSBProxyの実行ファイルが生成されました。whoami版USBProxyにはUSBProxy本体の他にサポートプログラムを含んでいます。これらのプログラムはswitchpadディレクトリの下に置いてあります。以下のようにmakeコマンドを実行することでサポートプログラムの実行ファイルを生成します。
+これで<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>の実行ファイルが生成されました。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>にはUSBProxy本体の他にサポートプログラムを含んでいます。これらのプログラムは<a href="https://github.com/v-whoami-v/USBProxy/tree/mk8dx-softdrift/switchpad">switchpadディレクトリ</a>の下に置いてあります。以下のように<code>make</code>コマンドを実行することでサポートプログラムの実行ファイルを生成します。
 </p>
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/src$ <span class="input">cd ../switchpad</span>
@@ -231,17 +241,25 @@ cc     gen_left.c   -o gen_left
 cc     gen_left_soft.c   -o gen_left_soft
 cc     gen_right.c   -o gen_right
 cc     gen_right_soft.c   -o gen_right_soft
+chmod +x gen_drift.sh
+chmod +x genrules_softdrift_left.sh
+chmod +x genrules_softdrift_right.sh
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
+
+<div class="note-title"><span class="note-title">BeagleBone Blackの名前解決</span></div>
+<div class="note-body">
+ここで利用するBeagleBone Blackの名前はarm.localですが、この名前からIPアドレスへの変換にはmDNSという仕組みを利用しています。最近のOSはmDNSを標準でサポートしているのが一般的ですが、もしもmDNSをサポートしていない場合には名前解決ができません。その場合には別の方法でBeagleBone BlackのIPアドレスを確認し、そのIPアドレスを用いてリモートログインする必要があります。
+</div>
 
 <h1 id="ch5" class="main">プログラム実行方法</h1>
 
 <p>
-whoami版USBProxyを実行する前に忘れずにホリパッドをBeagleBone Blackに接続します。
+<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を実行する前に忘れずにホリパッドをBeagleBone Blackに接続します。
 </p>
 
 <p>
-whoami版USBProxyの実行には引数として"-S"を指定します。実行には/run/rules.txtが存在する必要があるので先に作成しておきます。
+<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>の実行ファイルは<code>usb-mitm</code>です。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>として実行するには引数として"-S"を指定します。実行には/run/rules.txtが必要なので空のファイルを先に作成しておきます。
 </p>
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/switchpad$ <span class="input">cd ../src</span>
@@ -251,15 +269,15 @@ debian@arm:~/USBProxy/src$ <span class="input">sudo ./usb-mitm -S</span>
 </code></pre></div>
 
 <p>
-BeagleBone Blackに接続したコントローラがSwitch内で正常に動作することを確認します。USBProxyの動作は完璧ではないため、時々データロスが連続して発生し思った通りに動作しないことがありますがそれで正常ですのでご注意ください。
+BeagleBone Blackに接続したコントローラがSwitch内で正常に動作することを確認します。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>の動作は完璧ではないため、時々データロスが連続して発生し思った通りに動作しないことがありますのでご注意ください。
 </p>
 
 <p>
-またUSBProxyはCtrl-C(コントロールキーを押しながらCキーを押す)で終了します。USBProxyを終了せずに後述するrules.txtやinput.txtを書き換えたい場合には、PCで複数のターミナルウィンドウを開くなどして別途ログインしてください。
+また<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>はCtrl-C(コントロールキーを押しながらCキーを押す)で終了します。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を終了せずに後述するrules.txtやinput.txtを書き換えたい場合には、PCで複数のターミナルウィンドウを開くなどして別途ログインしてください。
 </p>
 
 <p>
-whoami版USBProxyを用いることでUSBコントローラのデータを変換しますが、それには２つの方法があります。
+<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を用いることでUSBコントローラのデータを変換してSwitchに転送できますが以下の２つの変換方法があります。
 </p>
 
 <ul class="testenv">
@@ -268,20 +286,20 @@ whoami版USBProxyを用いることでUSBコントローラのデータを変換
 </ul>
 
 <p>
-これら２つの設定方法を説明します。
+これら２つの変換方法について説明します。
 </p>
 
 <h2>変更ルールに基づいたアナログスティックの座標値変換</h2>
 
 <p>
-/run/rules.txtに座標の変換ルールを記述します。複数行記述することで複数の変換ルールを記述できます。変換ルール以下のフォーマットになります。
+/run/rules.txtに左スティックの座標変換ルールを記述します。複数行記述することで複数の変換ルールを記述できます。変換ルールのフォーマットは以下の通りです。
 </p>
 
 <div class="rule"><pre><code>入力X座標,入力Y座標,出力X座標,出力Y座標
 </code></pre></div>
 
 <p>
-例えば真左である(0,128)付近の入力を斜め入力(0,3)に変換するルールは以下のようになります。
+例えば真左である(0,128)付近のコントローラからの入力を斜め入力(0,3)に変換してSwitchに出力するルールは以下のようになります。ルールに記述されていない入力座標についてはコントローラからの出力をそのまま利用します。また、<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>にはもう少し現実的な<a href="https://github.com/v-whoami-v/USBProxy/blob/mk8dx-softdrift/switchpad/rules_sample.txt">rules.txtのサンプルファイル</a>が添付されています。
 </p>
 
 <div class="rule"><pre><code>0,127,0,3
@@ -293,17 +311,17 @@ whoami版USBProxyを用いることでUSBコントローラのデータを変換
 </code></pre></div>
 
 <p>
-変換ルールは開始時にロードされて利用されますが、コントローラの"+"ボタンを押すことで/run/rules.txtをリロードすることもできます。
+/run/rules.txtは<code>usb-mitm</code>開始時にロードされて利用されますが、コントローラの"+"ボタンを押すことで/run/rules.txtをリロードすることもできます。
 </p>
 
 <h2>コントローラからの出力データの完全置き換え</h2>
 
 <p>
-コントローラの出力値(16進数)を/run/input.txtに記述することで、コントローラのデータを完全に置き換えることができます。whoami版USBProxyに付属しているgeninputを利用することで簡単に/run/input.txtを生成できますのでファイルの内容については省略します。geninputコマンドの引数は以下の通りです。
+Switchに送信するコントロールデータ(16進数)を/run/input.txtに記述することでコントローラが出力したデータ全体を置き換えることができます。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>に付属している<code>geninput</code>を利用することで簡単に/run/input.txtを生成できますのでファイルの内容については省略します。<code>geninput</code>コマンドの引数は以下の通りです。
 </p>
 
 <table class="geninput">
-<tr><td width="30%">-leftx NUM</td><td>左スティックのX軸の値をNUMにする。</td></tr>
+<tr><td style="width:30%;">-leftx NUM</td><td>左スティックのX軸の値をNUMにする。</td></tr>
 <tr><td>-lefty NUM</td><td>左スティックのY軸の値をNUMにする。</td></tr>
 <tr><td>-rightx NUM</td><td>右スティックのX軸の値をNUMにする。</td></tr>
 <tr><td>-righty NUM</td><td>右スティックのY軸の値をNUMにする。</td></tr>
@@ -317,10 +335,11 @@ whoami版USBProxyを用いることでUSBコントローラのデータを変換
 <tr><td>-ZR</td><td>ZRボタンを押した状態にする。</td></tr>
 <tr><td>-CAP</td><td>キャプチャーボタンを押した状態にする。</td></tr>
 <tr><td>-HOME</td><td>ホームボタンを押した状態にする。</td></tr>
+<tr><td>-rm</td><td>/run/input.txtを削除する</td></tr>
 </table>
 
 <p>
-例えばアナログスティックを左入力(0,128)しBボタンを押しているという出力を生成するには以下のようにgeninputを実行します。ここではUSBProxyを実行した状態で別の作業を行うため、PCで新たなターミナルウィンドウを開いてBeagleBone Blackにリモートログインしています。
+例えばアナログスティックを左入力(0,128)しBボタンを押しているという出力を生成するには以下のように<code>geninput</code>を実行します。ここではUSBProxyを実行した状態で別の作業を行うため、PCで新たなターミナルウィンドウを開いてBeagleBone Blackにリモートログインしています。
 </p>
 
 <div class="term"><pre><code>user@pc:~$ <span class="input">ssh debian@arm.local</span>
@@ -336,35 +355,58 @@ permitted by applicable law.
 debian@arm:~$ <span class="input">cd USBProxy/switchpad</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo ./geninput -leftx 0 -lefty 128 -B</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
-debian@arm:~/USBProxy/switchpad$ 
+02 00 0f 00 80 80 80 00
+debian@arm:~$ <span class="input">cat /run/input.txt</span>
+02 00 0f 00 80 80 80 00debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
 <p>
-完全置き換えを終了するには/run/input.txtを削除します。
+完全置き換えを終了するには以下のように<code>geninput</code>を実行するなどして/run/input.txtを削除します。
 </p>
 
-<div class="term"><pre><code>debian@arm:~/USBProxy/src$ <span class="input">sudo rm /run/input.txt</span>
+<div class="term"><pre><code>debian@arm:~/USBProxy/src$ <span class="input">sudo ./geninput -rm</span>
+[sudo] password for debian: <span class="invisible">temppwd</span>
+debian@arm:~$ <span class="input">cat /run/input.txt</span>
+cat: /run/input.txt: No such file or directory
+debian@arm:~/USBProxy/src$ 
+</code></pre></div>
+
+<div class="note-title"><span class="note-title">BeagleBone Blackを終了させるには</span></div>
+<div class="note-body">
+BeagleBone Blackは電源ケーブルを接続するだけで起動しますが、正常終了させるためには<code>shutdown</code>コマンド等を利用する必要があります。以下のように<code>shutdown</code>コマンドを実行すると、終了作業が実行され最終的にLEDが消灯します。
+
+<div class="term"><pre><code>debian@arm:~/USBProxy/src$ <span class="input">sudo shutdown -h now</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/src$ 
 </code></pre></div>
+
+<p>
+電源ケーブル(SwitchとBeagleBone Blackを接続しているUSBケーブル)を取り外すことで強制終了もできます。強制終了した場合でもMicroSDカードのファイルシステムが破損することはないと思いますが、直前に編集したファイル等の内容が破損するかもしれないのでご注意ください。また、/runディレクトリはメモリ上に作成されるファイルシステムをマウントして利用しているため終了時に内部のファイルは全て削除されます。
+</p>
+
+</div>
 
 
 <h1 id="ch6" class="main">調査例</h1>
 
 <p>
-それではwhoami版のUSBProxyを利用して実際にアナログスティックの出力値とソフトドリフトの関係を少し調べてみましょう。
+それでは<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を利用して実際にアナログスティックの出力値とソフトドリフトの関係を少し調べてみましょう。
 </p>
 
 <h2>ソフトドリフトの境界座標</h2>
 
 <p>
-まずはソフトドリフト境界を強制的に利用してみましょう。ブーストカウンタが5増加するようになる座標は全てソフトドリフトの境界角度の座標(左方向(0,3)、右方向(255,4))に変換されるように/run/rules.txtを生成します。以下のコマンドで生成できます。
+まずはソフトドリフト境界の一つを確認してみましょう。
+</p>
+
+<p>
+ブーストカウンタが5増加するようになる座標は全てソフトドリフトの境界角度の座標(左方向(0,3)、右方向(255,4))に変換されるように/run/rules.txtを生成します。以下のコマンドで/run/rules.txtを生成できます。
 </p>
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/switchpad$ <span class="input">sudo rm /run/rules.txt</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 777 /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_left.sh 0,3 >> /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_right.sh 255,4 >> /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
@@ -375,7 +417,7 @@ debian@arm:~/USBProxy/switchpad$
 </p>
 
 <table class="video">
-  <caption>ソフトドリフトの境界座標入力の例(範囲内)</caption>
+  <caption>ソフトドリフトの境界座標入力の例(ソフトドリフト範囲内)</caption>
   <tr>
     <td><video src="videos/genrules_soft_drift_0_3_255_4.mp4" controls width="640" height="360"></video></td>
   </tr>
@@ -389,7 +431,7 @@ debian@arm:~/USBProxy/switchpad$
 <div class="term"><pre><code>debian@arm:~/USBProxy/switchpad$ <span class="input">sudo rm /run/rules.txt</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 777 /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_left.sh 0,2 >> /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_right.sh 255,3 >> /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
@@ -397,21 +439,29 @@ debian@arm:~/USBProxy/switchpad$
 
 
 <p>
-コントローラの"+"ボタンを押して設定ファイルをリロードして試してみると、ドリフト中に曲がる量は先程の設定とほとんど同じにもかかわらず、なかなかミニターボ発動可能状態にならないということが実感できると思います。
+再びコントローラの"+"ボタンを押して設定ファイルをリロードします。この設定ではドリフト中に曲がる量は先程の設定とほとんど同じにもかかわらず、なかなかミニターボ発動可能状態にならないということが実感できると思います。
 </p>
 
 <table class="video">
-  <caption>ソフトドリフトの境界座標入力の例(範囲外)</caption>
+  <caption>ソフトドリフトの境界座標入力の例(ソフトドリフト範囲外)</caption>
   <tr>
     <td><video src="videos/genrules_soft_drift_0_2_255_3.mp4" controls width="640" height="360"></video></td>
   </tr>
 </table>
 
+<p>
+今回行った実験ではアナログスティックの座標が(0,3)や(255,4)の時はブーストカウンタが早く溜まるけど、(0,2)や(255,3)の時はなかなか溜まらないということを確認しました。このようにSwitchに出力する座標をいろいろと変換して実行してみることで、各座標でのブーストカウンタの溜まる時間の変化や車体の曲がり方の変化を確認することができます。
+</p>
+
 
 <h2>コントロールの自動実行</h2>
 
 <p>
-次にコントロールの自動実行を試してみたいと思います。高精度な操作タイミングでの自動実行はできないので細かな調査には利用できませんが、精度を気にせずに同じ処理を何度も繰り返す場合に利用できます。基本的には先に説明したgeninputコマンをタイミングよく実行するスクリプトを書いて実行すれば実現できます。ということでサンプルとしてgen_drift.shというスクリプトを作ってみたのでそれを使ってみます。gen_drift.shの中身は以下の通りです。
+次にコントロールの自動実行を試してみます。
+</p>
+
+<p>
+高精度な操作タイミングでの自動実行はできないので細かな調査には利用できませんが、精度を気にせずに同じ処理を何度も繰り返す場合に利用できます。基本的には先に説明した<code>geninput</code>コマンドをタイミングよく実行するスクリプトを書いて実行すれば実現できます。ということでサンプルとして<code>gen_drift.sh</code>というスクリプトを作ってみたのでそれを使ってみます。<code>gen_drift.sh</code>の中身は以下の通りです。
 </p>
 
 <div class="script"><pre><code>#!/bin/sh
@@ -419,20 +469,19 @@ debian@arm:~/USBProxy/switchpad$
 sleep $1
 ./geninput -A -leftx $3 -lefty $4 -ZR
 sleep $2
-rm /run/input.txt
+./geninput -rm
 </code></pre></div>
 
 <p>
-例えば、走り始めて1秒後に座標(0,3)の左ドリフトを開始しその10秒後に停止する、という自動制御は以下のような引数でgen_drift.shを実行することで実現できます。
+例えば、走り始めて1秒後に座標(0,3)の左ドリフトを開始しその10秒後に停止する、という自動制御は以下のような引数で<code>gen_drift.sh</code>を実行することで実現できます。
 </p>
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/switchpad$ <span class="input">sudo ./gen_drift.sh 1 10 0 3</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
+04 00 0f 80 80 80 80 00
+84 00 0f 00 03 80 80 00
+debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
-
-<p>
-壁にぶつかるなど停止することがないように注意する必要がありますが、このコマンドの引数を少しずつ変化させながら何度も実験を行うことでブーストカウンタの増加量が5となる座標の範囲を調べていくことができます。
-</p>
 
 <table class="video">
   <caption>コントロールの自動実行例</caption>
@@ -441,18 +490,22 @@ rm /run/input.txt
   </tr>
 </table>
 
+<p>
+壁にぶつかるなど停止することがないように注意する必要がありますが、このコマンドの引数を少しずつ変化させながら何度も実験を行うことでブーストカウンタの増加量が5となる座標の範囲を調べていくことができます。ミニターボが発動可能状態となるまでの実際の時間は別途キャプチャボード等でプレイ動画を録画しておき、ドリフト中のフレーム数を数えることで調べることができます。
+</p>
+
 
 <h1 id="ch7" class="main">まとめ</h1>
 
 <p>
 このページではソフトドリフトの斜め入力境界角度の調査を行うのに利用したシステムの構築方法と利用方法について説明しました。
-このシステムではUSBコントローラから出力されたアナログスティック値を厳密な値に変換するためにBeagleBone BlackとUSBProxyを利用しました。
+このシステムではUSBコントローラから出力されたアナログスティック値を厳密な値に変換するためにBeagleBone Blackと<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を利用しました。
 データロスや遅延等が発生するため常用するには適しませんが設定ファイルに記述した通りの厳密なコントローラ出力を実現することが可能となっています。
 また、マリオカート8デラックスのソフトドリフトの調査に利用するために構築したシステムですが、その他の用途にも利用できるかもしれません。
 </p>
 
 <p>
-稚拙な説明で分かりにくい部分が多々あると思いますが、このページで書かれている内容が少しでもお役に立つようであれば幸いです！
+稚拙な説明で分かりにくい部分が多々あると思いますが、このページで書かれている内容が少しでもお役に立てば幸いです！
 </p>
 
 <div style="text-align:center;"><a href="index.html">ソフトドリフトに関する調査に戻る</a></div>
