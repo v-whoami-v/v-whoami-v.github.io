@@ -138,7 +138,7 @@ user@pc:~/Downlods$
 
 <div class="term"><pre><code>user@pc:~/Downloads$ <span class="input">ls /dev/sd*</span>
 /dev/sda  /dev/sda1  /dev/sda2
-<span class="input">-- ここでMircoSDカードをPCに接続 --</span>
+<span class="input">-- ここでMircoSDカードをPCに挿入 --</span>
 user@pc:~/Downloads$ <span class="input">ls /dev/sd*</span>
 /dev/sda  /dev/sda1  /dev/sda2  /dev/sdb  /dev/sdb1
 user@pc:~/Downloads$ <span class="input">df</span>
@@ -259,11 +259,10 @@ debian@arm:~/USBProxy/switchpad$
 </p>
 
 <p>
-<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>の実行ファイルは<code>usb-mitm</code>です。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>として実行するには引数として"-S"を指定します。実行には/run/rules.txtが必要なので空のファイルを先に作成しておきます。
+<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>の実行ファイルは<code>usb-mitm</code>です。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>として実行するには引数として"-S"を指定します。
 </p>
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/switchpad$ <span class="input">cd ../src</span>
-debian@arm:~/USBProxy/src$ <span class="input">sudo touch /run/rules.txt</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/src$ <span class="input">sudo ./usb-mitm -S</span>
 </code></pre></div>
@@ -273,7 +272,7 @@ BeagleBone Blackに接続したコントローラがSwitch内で正常に動作�
 </p>
 
 <p>
-また<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>はCtrl-C(コントロールキーを押しながらCキーを押す)で終了します。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を終了せずに後述するrules.txtやinput.txtを書き換えたい場合には、PCで複数のターミナルウィンドウを開くなどして別途ログインしてください。
+また<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>はCtrl-C(コントロールキーを押しながらCキーを押す)で終了します。<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を終了せずに後述する/run/rules.txtや/run/input.txtを書き換えたい場合には、PCで複数のターミナルウィンドウを開くなどして別途ログインしてください。
 </p>
 
 <p>
@@ -373,7 +372,7 @@ debian@arm:~/USBProxy/src$
 
 <div class="note-title"><span class="note-title">BeagleBone Blackを終了させるには</span></div>
 <div class="note-body">
-BeagleBone Blackは電源ケーブルを接続するだけで起動しますが、正常終了させるためには<code>shutdown</code>コマンド等を利用する必要があります。以下のように<code>shutdown</code>コマンドを実行すると、終了処理が実行され最終的にLEDが消灯します。
+BeagleBone Blackは電源ケーブルを接続するだけで起動しますが、正常終了させるためには<code>shutdown</code>コマンド等を利用する必要があります。以下のように<code>shutdown</code>コマンドを実行すると、終了作業が実行され最終的にBeagleBone Black上の4つのUSER LEDSが全て消灯します。
 
 <div class="term"><pre><code>debian@arm:~/USBProxy/src$ <span class="input">sudo shutdown -h now</span>
 [sudo] password for debian: <span class="invisible">temppwd</span>
