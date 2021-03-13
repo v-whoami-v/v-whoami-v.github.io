@@ -46,7 +46,7 @@
 
 <div class="note-title"><span class="note-title">注意</span></div>
 <div class="note-body">
-細かな環境の違いにより際限できない可能性もあると思います。また、ここで紹介した方法だけが唯一の方法というわけではなく、これ以外の方法でも同様の実験は可能だと思います。
+細かな環境の違いにより再現できない可能性もあります。また、ここで紹介した方法だけが唯一の方法というわけではなく、これ以外の方法でも同様の実験は可能でしょう。
 </div>
 
 <h1 id="ch2" class="main">調査方法概要</h1>
@@ -57,7 +57,7 @@
 
 <div class="note-title"><span class="note-title">Facedancerについて</span></div>
 <div class="note-body">
-FacedancerにはSwitchのプロコンを模擬するデモプログラムが添付されています。<a href="https://greatscottgadgets.com/greatfet/one/">GreatFET One</a>とデモプログラムを用いることでSwitchからプロコンだと認識されることまでは確認しました。それ以上の確認は行っていませんが、このプログラムを改造することでより正確に制御されたコントローラ出力を行うことが可能かもしれません。
+<a href="https://github.com/usb-tools/Facedancer">Facedancer</a>にはSwitchのプロコンを模擬するデモプログラムが添付されています。<a href="https://greatscottgadgets.com/greatfet/one/">GreatFET One</a>とデモプログラムを用いることでSwitchからプロコンだと認識されることまでは確認しました。それ以上の確認は行っていませんが、<a href="https://github.com/usb-tools/Facedancer">Facedancer</a>を利用することで操作タイミングもより正確に制御されたコントローラ出力を行うことが可能かもしれません。
 </div>
 
 
@@ -88,7 +88,7 @@ FacedancerにはSwitchのプロコンを模擬するデモプログラムが添�
 
 <div class="note-title"><span class="note-title">注意</span></div>
 <div class="note-body">
-USB接続のコントローラとしてホリパッドを利用しました。ホリパッド以外で動作するかは分かりません。とりあえずミニホリパッドでも試してみたのですが残念ながら動作しませんでした。またホリパッドであっても仕様変更等により動作しない可能性もあります。
+USB接続のコントローラとしてホリパッドを利用しました。ホリパッド以外で動作するかは分かりません。とりあえず<a href="https://hori.jp/products/nsw/horipad_mini_pokemon/">ホリパッド ミニ</a>でも試してみたのですが残念ながら動作しませんでした。またホリパッドであっても仕様変更等により動作しない可能性もあります。
 </div>
 
 <p>
@@ -244,6 +244,7 @@ cc     gen_right_soft.c   -o gen_right_soft
 chmod +x gen_drift.sh
 chmod +x genrules_softdrift_left.sh
 chmod +x genrules_softdrift_right.sh
+chmod +x genrules_softdrift.sh
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
@@ -298,7 +299,7 @@ BeagleBone Blackに接続したコントローラがSwitch内で正常に動作�
 </code></pre></div>
 
 <p>
-例えば真左である(0,128)付近のコントローラからの入力を斜め入力(0,3)に変換してSwitchに出力するルールは以下のようになります。ルールに記述されていない入力座標についてはコントローラからの出力をそのまま利用します。また、<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>にはもう少し現実的な<a href="https://github.com/v-whoami-v/USBProxy/blob/mk8dx-softdrift/switchpad/rules_sample.txt">rules.txtのサンプルファイル</a>が添付されています。
+例えば真左である(0,128)付近のコントローラからの入力を斜め入力(0,3)に変換してSwitchに出力するルールは以下のようになります。ルールに記述されていない入力座標についてはコントローラからの出力をそのまま利用します。また、<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>にはもう少し現実的な<a href="https://github.com/v-whoami-v/USBProxy/blob/mk8dx-softdrift/switchpad/rules_sample.txt">/run/rules.txtのサンプルファイル</a>が添付されています。
 </p>
 
 <div class="rule"><pre><code>0,127,0,3
@@ -310,7 +311,7 @@ BeagleBone Blackに接続したコントローラがSwitch内で正常に動作�
 </code></pre></div>
 
 <p>
-/run/rules.txtは<code>usb-mitm</code>開始時にロードされて利用されますが、コントローラの"+"ボタンを押すことで/run/rules.txtをリロードすることもできます。
+/run/rules.txtは<code>usb-mitm</code>開始時にロードされて利用されますが、コントローラの"+"ボタンを押すことでリロードすることもできます。
 </p>
 
 <h2>コントローラからの出力データの完全置き換え</h2>
@@ -398,6 +399,11 @@ user@pc:~$
 それでは<a href="https://github.com/v-whoami-v/USBProxy/">whoami版USBProxy</a>を利用して実際にアナログスティックの出力値とソフトドリフトの関係を少し調べてみましょう。
 </p>
 
+<div class="note-title"><span class="note-title">データロスに注意</span></div>
+<div class="note-body">
+先に説明した通りデータロスが度々発生します。そのため想定したタイミングで制御することができずに思い通りのコントロールができないことがありますのでご注意ください。
+</div>
+
 <h2>ソフトドリフトの境界座標</h2>
 
 <p>
@@ -412,13 +418,12 @@ user@pc:~$
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_left.sh 0,3 >> /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_right.sh 255,4 >> /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,3 255,4 > /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
 <p>
-次にコントローラの"+"ボタンを押して設定ファイルをリロードします。この状態で左スティックの補正画面を開いて左や右にスティックを倒してみると強制的に45度付近の座標に変換されているのが分かると思います。この状態でマリオカート8デラックスでプレイしてみると斜め入力の限界角度まで倒した時の車体の動作の感覚が分かると思います。
+次にコントローラの"+"ボタンを押して設定ファイルをリロードします。この状態でSwitchの設定から"コントローラーとセンサー > スティックの補正"を開いて左スティックを押し込みます。左や右にスティックを倒してみると強制的に45度付近の座標に変換されているのが分かると思います。この状態でマリオカート8デラックスでプレイしてみると斜め入力の限界角度まで倒した時の車体の動作の感覚がなんとなく分かると思います。
 </p>
 
 <table class="video">
@@ -437,8 +442,7 @@ debian@arm:~/USBProxy/switchpad$
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_left.sh 0,2 >> /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift_right.sh 255,3 >> /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,2 255,3 > /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
@@ -498,7 +502,6 @@ debian@arm:~/USBProxy/switchpad$
 <p>
 壁にぶつかるなど停止することがないように注意する必要がありますが、このコマンドの引数を少しずつ変化させながら何度も実験を行うことでブーストカウンタの増加量が5となる座標の範囲を調べていくことができます。ミニターボが発動可能状態となるまでの実際の時間は別途キャプチャボード等でプレイ動画を録画しておき、ドリフト中のフレーム数を数えることで調べることができます。
 </p>
-
 
 <h1 id="ch7" class="main">まとめ</h1>
 
