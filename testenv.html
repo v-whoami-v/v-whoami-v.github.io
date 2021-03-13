@@ -516,6 +516,34 @@ debian@arm:~/USBProxy/switchpad$
 稚拙な説明で分かりにくい部分が多々あると思いますが、このページで書かれている内容が少しでもお役に立てば幸いです！
 </p>
 
+<div class="note-title"><span class="note-title">ポケモンでの利用例</span></div>
+<div class="note-body">
+
+ポケモンソードでタマゴの孵化をさせてみました。以下のようなスクリプトを実行することでぐるぐるとその場で回ってみました。時々データロスが発生するため残念ながら動作が安定しないのが分かると思います。
+
+<div class="script"><pre><code>#!/bin/sh
+
+while :; do
+   ./geninput -leftx 0 -lefty 0 -rightx 255; sleep 0.2
+   ./geninput -leftx 128 -lefty 0 -rightx 255; sleep 0.2
+   ./geninput -leftx 255 -lefty 0 -rightx 255; sleep 0.2
+   ./geninput -leftx 255 -lefty 128 -rightx 255; sleep 0.2
+   ./geninput -leftx 255 -lefty 255 -rightx 255; sleep 0.2
+   ./geninput -leftx 128 -lefty 255 -rightx 255; sleep 0.2
+   ./geninput -leftx 0 -lefty 255 -rightx 255; sleep 0.2
+   ./geninput -leftx 0 -lefty 128 -rightx 255; sleep 0.2
+done
+</code></pre></div>
+
+<table class="video">
+  <caption>ポケモンでのタマゴ孵化</caption>
+  <tr>
+    <td><video src="videos/pokemon.mp4" controls width="640" height="360"></video></td>
+  </tr>
+</table>
+
+</div>
+
 <div style="text-align:center;"><a href="index.html">ソフトドリフトに関する調査に戻る</a></div>
 
 
