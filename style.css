@@ -561,6 +561,6 @@ table.login td.value {
   text-align: center;
 }
 
-div.term {
+div.term, div.script {
   text-indent: 0em;
 }
