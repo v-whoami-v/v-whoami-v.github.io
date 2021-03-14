@@ -418,12 +418,12 @@ user@pc:~$
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,3 255,4 > /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,3 255,4 &gt; /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
 <p>
-次にコントローラの"+"ボタンを押して設定ファイルをリロードします。この状態でSwitchの設定から"コントローラーとセンサー > スティックの補正"を開いて左スティックを押し込みます。左や右にスティックを倒してみると強制的に45度付近の座標に変換されているのが分かると思います。この状態でマリオカート8デラックスでプレイしてみると斜め入力の限界角度まで倒した時の車体の動作の感覚がなんとなく分かると思います。
+次にコントローラの"+"ボタンを押して設定ファイルをリロードします。この状態でSwitchの設定から"コントローラーとセンサー &gt; スティックの補正"を開いて左スティックを押し込みます。左や右にスティックを倒してみると強制的に45度付近の座標に変換されているのが分かると思います。この状態でマリオカート8デラックスでプレイしてみると斜め入力の限界角度まで倒した時の車体の動作の感覚がなんとなく分かると思います。
 </p>
 
 <table class="video">
@@ -442,7 +442,7 @@ debian@arm:~/USBProxy/switchpad$
 [sudo] password for debian: <span class="invisible">temppwd</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo touch /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ <span class="input">sudo chmod 666 /run/rules.txt</span>
-debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,2 255,3 > /run/rules.txt</span>
+debian@arm:~/USBProxy/switchpad$ <span class="input">./genrules_softdrift.sh 0,2 255,3 &gt; /run/rules.txt</span>
 debian@arm:~/USBProxy/switchpad$ 
 </code></pre></div>
 
